@@ -3,14 +3,21 @@ package org.bddaid.test;
 import com.beust.jcommander.ParameterException;
 import org.bddaid.cli.PathValidator;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.File;
 
 public class PathValidatorTest {
 
-    public final String FEATURES_DIR = "features/valid";
-    public final String VALID_FEATURE_FILE = "basic_feature.feature";
+    private final String FEATURES_DIR = "features";
+    private final String VALID_FEATURE_FILE = "basic_feature.feature";
+    private ClassLoader classLoader;
+
+    @BeforeClass
+    public void getClassLoader() {
+        classLoader = getClass().getClassLoader();
+    }
 
     @Test
     public void should_ThrowError_When_FilePathDoesNotExist() {
@@ -25,15 +32,15 @@ public class PathValidatorTest {
 
     @Test
     public void should_NotThrowError_When_DirectoryDoesExist() {
-        ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource(FEATURES_DIR).getFile());
         Assert.assertEquals(file.exists(), true);
     }
 
     @Test
     public void should_NotThrowError_When_FileDoesExist() {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource(FEATURES_DIR + "/" + VALID_FEATURE_FILE).getFile());
+        ;
+        File file = new File(classLoader.getResource(FEATURES_DIR + "/valid/" + VALID_FEATURE_FILE).getFile());
         Assert.assertEquals(file.getName(), VALID_FEATURE_FILE);
     }
+
 }

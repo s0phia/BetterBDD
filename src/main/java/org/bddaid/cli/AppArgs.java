@@ -16,7 +16,7 @@ public class AppArgs {
     @Parameter(names = {"-p", "--path"},
             validateWith = PathValidator.class,
             description = "Path to directory containing feature files")
-    private String path;
+    private String path = ".";
 
     public List<String> getParameters() {
         return parameters;
