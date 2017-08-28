@@ -1,67 +1,49 @@
 package org.bddaid.rules.impl;
 
-import gherkin.AstBuilder;
-import gherkin.Parser;
-import gherkin.ParserException;
 import gherkin.ast.GherkinDocument;
 import gherkin.pickles.Compiler;
 import gherkin.pickles.Pickle;
+import org.bddaid.model.Feature;
+import org.bddaid.model.RunResult;
 import org.bddaid.rules.IRuleSingle;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EmptyFeature implements IRuleSingle {
 
+    private Feature feature;
+
     @Override
-    public boolean applyRule(File featureFile) {
+    public RunResult applyRule(Feature feature) {
 
-        Reader reader = null;
-        GherkinDocument gherkinDocument = null;
-        boolean result = true;
+        this.feature = feature;
+        boolean isSuccess = true;
+        List<String> errors = new ArrayList<>();
 
-        try {
-            reader = new FileReader(featureFile);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            result = false;
-        }
-
-        try {
-            Parser<GherkinDocument> parser = new Parser<>(new AstBuilder());
-            gherkinDocument = parser.parse(reader);
-
-        } catch (ParserException e) {
-
-            System.out.println("Could not parse feature file: " + featureFile + "\n" + e.getMessage());
-
-        }
-
+        GherkinDocument gherkinDocument = feature.getGherkinDocument();
         List<Pickle> pickles = new Compiler().compile(gherkinDocument);
 
         if (pickles.size() < 1) {
-            System.out.println(getErrorMessage(featureFile.toString()));
+            errors.add(getErrorMessage());
+            isSuccess = false;
         }
 
-        return result;
-
+        return new RunResult(isSuccess, errors);
     }
 
     @Override
     public String getName() {
-        return "Empty feature file";
+        return "empty_feature_file";
     }
 
     @Override
     public String getDescription() {
-        return null;
+        return "This rule prevents empty feature files";
     }
 
     @Override
-    public String getErrorMessage(String fileName) {
-        return String.format("\nFeature file %s is empty", fileName);
+    public String getErrorMessage() {
+        return String.format("\nFeature file %s is empty", feature.getFileName());
     }
 }

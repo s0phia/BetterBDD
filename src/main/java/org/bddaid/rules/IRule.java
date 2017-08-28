@@ -6,6 +6,6 @@ public interface IRule {
 
     String getDescription();
 
-    String getErrorMessage(String featureFile);
+    String getErrorMessage();
 }
 

@@ -1,10 +1,11 @@
 package org.bddaid.rules;
 
-import java.io.File;
+import org.bddaid.model.Feature;
+import org.bddaid.model.RunResult;
 
 public interface IRuleSingle extends  IRule{
 
-    boolean applyRule(File featureFile);
+    RunResult applyRule(Feature feature);
 
 }
 

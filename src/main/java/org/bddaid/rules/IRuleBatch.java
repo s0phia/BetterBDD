@@ -1,11 +1,13 @@
 package org.bddaid.rules;
 
-import java.io.File;
+import org.bddaid.model.Feature;
+import org.bddaid.model.RunResult;
+
 import java.util.List;
 
 public interface IRuleBatch extends IRule{
 
-    boolean applyRule(List<File> featureFiles);
+    RunResult applyRule(List<Feature> featureFiles);
 
 }
 

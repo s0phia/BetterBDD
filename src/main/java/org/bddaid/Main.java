@@ -1,12 +1,19 @@
 package org.bddaid;
 
 import com.beust.jcommander.JCommander;
+import gherkin.AstBuilder;
+import gherkin.Parser;
+import gherkin.ParserException;
+import gherkin.ast.GherkinDocument;
 import org.bddaid.cli.AppArgs;
-import org.bddaid.rules.IRuleSingle;
+import org.bddaid.model.Feature;
+import org.bddaid.model.RunResult;
+import org.bddaid.rules.IRule;
+import org.bddaid.rules.impl.DuplicateScenarioName;
 import org.bddaid.rules.impl.EmptyFeature;
+import org.bddaid.runner.TestRunner;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,9 +24,6 @@ import java.util.stream.Collectors;
 public class Main {
 
     private static final AppArgs appArgs = new AppArgs();
-
-    private static List<IRuleSingle> rules;
-    private static List<File> featureFiles;
 
     public static void main(String... args) {
 
@@ -45,23 +49,60 @@ public class Main {
 
     private void run() {
 
-        getRules();
-        featureFiles = getFeatureFiles(appArgs.getPath());
-        runRules();
+        List<File> featureFiles = getFeatureFiles(appArgs.getPath());
+        List<Feature> parsedFeatures = parseFeatureFiles(featureFiles);
 
+        RunResult runResult = new TestRunner().runRules(parsedFeatures, getRules());
+
+        if (!runResult.isSuccess())
+            throw new RuntimeException(runResult.getErrors().toString());
     }
 
-    private void runRules() {
-        featureFiles.forEach((f -> rules.forEach((r) -> r.applyRule(f))));
+    private List<Feature> parseFeatureFiles(List<File> featureFiles) {
+
+        List<Feature> parsedFeatures = new ArrayList<>();
+        List<String> errors = new ArrayList<>();
+        Reader reader;
+        GherkinDocument gherkinDocument;
+        Parser<GherkinDocument> parser = new Parser<>(new AstBuilder());
+
+        for (File featureFile : featureFiles) {
+
+            try {
+                reader = new FileReader(featureFile);
+                gherkinDocument = parser.parse(reader);
+                parsedFeatures.add(new Feature(featureFile.getAbsolutePath(), gherkinDocument));
+
+            } catch (FileNotFoundException e){
+                throw new RuntimeException(e);
+
+            }catch (ParserException e) {
+
+                String message = String.format("\n\nCould not parse feature file: %s \n %s",
+                        featureFile, e.getMessage());
+                errors.add(message);
+            }
+
+        }
+
+        if (errors.size() > 0)
+            throw new RuntimeException(errors.toString());
+
+        return parsedFeatures;
     }
 
-    private void getRules() {
-        rules = new ArrayList<>();
+
+
+    private List<IRule> getRules() {
+
+        List<IRule> rules = new ArrayList<>();
         rules.add(new EmptyFeature());
+        rules.add(new DuplicateScenarioName());
+        return rules;
     }
 
     private List<File> getFeatureFiles(String path) {
-        List<File> features = new ArrayList<>();
+        List<File> features;
         try {
             features = Files.walk(Paths.get(path))
                     .filter(Files::isRegularFile)
@@ -72,8 +113,8 @@ public class Main {
             throw new RuntimeException(e);
         }
 
-        if (features.size() <1)
-            throw new RuntimeException(String.format("No feature files found in given path [%s]", path));
+        if (features.size() < 1)
+            throw new RuntimeException(String.format("No feature files found in given path: %s", path));
 
         return features;
     }
