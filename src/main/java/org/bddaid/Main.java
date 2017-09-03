@@ -7,7 +7,7 @@ import gherkin.ParserException;
 import gherkin.ast.GherkinDocument;
 import org.bddaid.cli.AppArgs;
 import org.bddaid.model.Feature;
-import org.bddaid.model.RunResult;
+import org.bddaid.model.result.*;
 import org.bddaid.rules.IRule;
 import org.bddaid.rules.impl.DuplicateScenarioName;
 import org.bddaid.rules.impl.EmptyFeature;
@@ -54,8 +54,47 @@ public class Main {
 
         RunResult runResult = new TestRunner().runRules(parsedFeatures, getRules());
 
-        if (!runResult.isSuccess())
-            throw new RuntimeException(runResult.getErrors().toString());
+        if (!runResult.isSuccess()) {
+
+            for (BDDRunResult bddRunResult : runResult.getFeatureRunResults()) {
+                if (bddRunResult instanceof FeatureRunResult) {
+
+                    FeatureRunResult featureRunResult = ((FeatureRunResult) bddRunResult);
+
+                    System.out.println("Feature: " + featureRunResult.getFeature().getFileName() +
+                            "Result: " + bddRunResult.isSuccess());
+
+                    if (!bddRunResult.isSuccess()) {
+                        System.out.println("\tFailures: ");
+
+                        for (Failure failure : featureRunResult.getFailures()) {
+                            System.out.println("\t Rule violation: " + failure.getRule().getName() + "\n\t\t " + failure.getMessage());
+                        }
+
+                    }
+                } else if (bddRunResult instanceof FeaturesRunResult) {
+
+                    FeaturesRunResult featuresRunResult = ((FeaturesRunResult) bddRunResult);
+                    if (!featuresRunResult.isSuccess()) {
+
+                        for (Feature feature : featuresRunResult.getFeatures()) {
+                            if (!featuresRunResult.isSuccess()) {
+                                System.out.println("\t" + feature.getFileName());
+                            }
+                        }
+                        System.out.println("\t\t Rule violation: " + featuresRunResult.getFailures().get(0).getRule().getName());
+
+                    }
+                    System.out.println("\t Features: ");
+                    for (Failure failure : featuresRunResult.getFailures()) {
+
+                    }
+
+                }
+            }
+            System.exit(1);
+        }
+
     }
 
     private List<Feature> parseFeatureFiles(List<File> featureFiles) {
@@ -73,10 +112,10 @@ public class Main {
                 gherkinDocument = parser.parse(reader);
                 parsedFeatures.add(new Feature(featureFile.getAbsolutePath(), gherkinDocument));
 
-            } catch (FileNotFoundException e){
+            } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
 
-            }catch (ParserException e) {
+            } catch (ParserException e) {
 
                 String message = String.format("\n\nCould not parse feature file: %s \n %s",
                         featureFile, e.getMessage());
@@ -90,7 +129,6 @@ public class Main {
 
         return parsedFeatures;
     }
-
 
 
     private List<IRule> getRules() {

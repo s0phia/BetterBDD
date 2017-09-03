@@ -3,33 +3,31 @@ package org.bddaid.rules.impl;
 import gherkin.ast.GherkinDocument;
 import gherkin.pickles.Compiler;
 import gherkin.pickles.Pickle;
-import org.bddaid.model.Feature;
-import org.bddaid.model.RunResult;
+import org.bddaid.model.*;
+import org.bddaid.model.result.Failure;
+import org.bddaid.model.result.FeatureRunResult;
 import org.bddaid.rules.IRuleSingle;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.bddaid.model.RuleCategory.REDUNDANCY;
+
 public class EmptyFeature implements IRuleSingle {
 
-    private Feature feature;
-
     @Override
-    public RunResult applyRule(Feature feature) {
+    public FeatureRunResult applyRule(Feature feature) {
 
-        this.feature = feature;
-        boolean isSuccess = true;
-        List<String> errors = new ArrayList<>();
+        List<Failure> failures = new ArrayList<>();
 
         GherkinDocument gherkinDocument = feature.getGherkinDocument();
         List<Pickle> pickles = new Compiler().compile(gherkinDocument);
 
         if (pickles.size() < 1) {
-            errors.add(getErrorMessage());
-            isSuccess = false;
+            failures.add(new Failure(this, getErrorMessage()));
         }
 
-        return new RunResult(isSuccess, errors);
+        return new FeatureRunResult(feature, failures);
     }
 
     @Override
@@ -44,6 +42,16 @@ public class EmptyFeature implements IRuleSingle {
 
     @Override
     public String getErrorMessage() {
-        return String.format("\nFeature file %s is empty", feature.getFileName());
+        return ("Feature file is empty");
     }
+
+    @Override
+    public RuleCategory getCategory() {
+        return REDUNDANCY;
+    }
+
+
 }
+
+
+

@@ -3,8 +3,10 @@ package org.bddaid.rules.impl;
 import gherkin.ast.GherkinDocument;
 import gherkin.pickles.Compiler;
 import gherkin.pickles.Pickle;
-import org.bddaid.model.Feature;
-import org.bddaid.model.RunResult;
+import org.bddaid.model.*;
+import org.bddaid.model.result.BDDRunResult;
+import org.bddaid.model.result.Failure;
+import org.bddaid.model.result.FeaturesRunResult;
 import org.bddaid.rules.IRuleBatch;
 
 import java.util.ArrayList;
@@ -12,15 +14,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.bddaid.model.RuleCategory.DUPLICATION;
+
 public class DuplicateScenarioName implements IRuleBatch {
 
     private Map<String, Map<String, Integer>> featuresWithDuplicates = new HashMap<>();
 
     @Override
-    public RunResult applyRule(List<Feature> features) {
+    public BDDRunResult applyRule(List<Feature> features) {
 
-        boolean result = true;
-        List<String> errors = new ArrayList<>();
+        List<Failure> failures = new ArrayList<>();
 
         GherkinDocument gherkinDocument = null;
         for (Feature feature : features) {
@@ -36,8 +39,6 @@ public class DuplicateScenarioName implements IRuleBatch {
                     } else {
                         frequency.put(pickle.getName(), 1);
                     }
-
-
                 }
 
                 for (Map.Entry<String, Integer> fr : frequency.entrySet()) {
@@ -52,10 +53,9 @@ public class DuplicateScenarioName implements IRuleBatch {
 
         }
         if (featuresWithDuplicates.size() > 0) {
-            errors.add(getErrorMessage());
-            result = false;
+            failures.add(new Failure(this, getErrorMessage()));
         }
-        return new RunResult(result,errors);
+        return new FeaturesRunResult(features, failures);
 
     }
 
@@ -72,11 +72,17 @@ public class DuplicateScenarioName implements IRuleBatch {
     @Override
     public String getErrorMessage() {
 
-        String msg = "\nDuplicate scenario names detected in feature files:";
+        String msg = "Duplicate scenario names detected in feature files:";
 
         for (Map.Entry<String, Map<String, Integer>> feature : featuresWithDuplicates.entrySet())
             msg = msg + String.format("\n Feature file: %s \n\tScenarios: %s", feature.getKey(), feature.getValue().entrySet());
 
         return msg;
     }
+
+    @Override
+    public RuleCategory getCategory() {
+        return DUPLICATION;
+    }
 }
+

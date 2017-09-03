@@ -1,11 +1,11 @@
 package org.bddaid.rules;
 
 import org.bddaid.model.Feature;
-import org.bddaid.model.RunResult;
+import org.bddaid.model.result.FeatureRunResult;
 
 public interface IRuleSingle extends  IRule{
 
-    RunResult applyRule(Feature feature);
+    FeatureRunResult applyRule(Feature feature);
 
 }
 
