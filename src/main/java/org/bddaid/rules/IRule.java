@@ -1,6 +1,7 @@
 package org.bddaid.rules;
 
-import org.bddaid.model.RuleCategory;
+import org.bddaid.model.enums.RuleCategory;
+import org.bddaid.model.enums.RunLevel;
 
 public interface IRule {
 
@@ -11,5 +12,7 @@ public interface IRule {
     String getErrorMessage();
 
     RuleCategory getCategory();
+
+    RunLevel getRunLevel();
 }
 

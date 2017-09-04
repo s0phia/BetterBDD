@@ -3,10 +3,13 @@ package org.bddaid.rules.impl;
 import gherkin.ast.GherkinDocument;
 import gherkin.pickles.Compiler;
 import gherkin.pickles.Pickle;
-import org.bddaid.model.*;
-import org.bddaid.model.result.BDDRunResult;
-import org.bddaid.model.result.Failure;
-import org.bddaid.model.result.FeaturesRunResult;
+import org.bddaid.model.Feature;
+import org.bddaid.model.enums.RuleCategory;
+import org.bddaid.model.enums.RunLevel;
+import org.bddaid.model.result.*;
+import org.bddaid.model.result.impl.FeatureRunResult;
+import org.bddaid.model.result.impl.FeaturesRunResult;
+import org.bddaid.model.result.impl.ScenarioRunResult;
 import org.bddaid.rules.IRuleBatch;
 
 import java.util.ArrayList;
@@ -14,25 +17,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.bddaid.model.RuleCategory.DUPLICATION;
+import static org.bddaid.model.enums.RuleCategory.DUPLICATION;
 
 public class DuplicateScenarioName implements IRuleBatch {
 
-    private Map<String, Map<String, Integer>> featuresWithDuplicates = new HashMap<>();
+     private List<Feature> featuresWithDuplicates = new ArrayList<>();
 
     @Override
-    public BDDRunResult applyRule(List<Feature> features) {
+    public RunResult applyRule(List<Feature> features) {
 
-        List<Failure> failures = new ArrayList<>();
 
-        GherkinDocument gherkinDocument = null;
+        List<FeatureRunResult> featureRunResultList = new ArrayList<>();
+
         for (Feature feature : features) {
 
-            gherkinDocument = feature.getGherkinDocument();
+            GherkinDocument gherkinDocument = feature.getGherkinDocument();
             List<Pickle> pickles = new Compiler().compile(gherkinDocument);
 
             Map<String, Integer> frequency = new HashMap<>();
-            if (pickles.size() > 1) {
+
+            if (pickles.size() > 0) {
                 for (Pickle pickle : pickles) {
                     if (frequency.containsKey(pickle.getName())) {
                         frequency.put(pickle.getName(), frequency.get(pickle.getName()) + 1);
@@ -41,21 +45,33 @@ public class DuplicateScenarioName implements IRuleBatch {
                     }
                 }
 
+                List<ScenarioRunResult> scenarioRunResultList = new ArrayList<>();
+
                 for (Map.Entry<String, Integer> fr : frequency.entrySet()) {
-                    if (fr.getValue() > 1)
-                        this.featuresWithDuplicates.put(feature.getFileName(), frequency);
+                    if (fr.getValue() > 1) {
+                        this.featuresWithDuplicates.add(feature);
+                        scenarioRunResultList.add(new ScenarioRunResult(false, this, fr.getKey()));
 
+                    } else {
+                        scenarioRunResultList.add(new ScenarioRunResult(true, this, fr.getKey()));
+                    }
 
+                    boolean featureIsSuccess = true;
+
+                    for (ScenarioRunResult result : scenarioRunResultList) {
+                        if (!result.isSuccess())
+                            featureIsSuccess = false;
+                    }
+
+                    featureRunResultList.add(new FeatureRunResult(featureIsSuccess, this, feature, scenarioRunResultList));
                 }
             } else {
                 //TODO: log warning
             }
+         }
+        boolean success = featuresWithDuplicates.size() <= 0;
 
-        }
-        if (featuresWithDuplicates.size() > 0) {
-            failures.add(new Failure(this, getErrorMessage()));
-        }
-        return new FeaturesRunResult(features, failures);
+        return new FeaturesRunResult(success, this, featureRunResultList);
 
     }
 
@@ -71,18 +87,18 @@ public class DuplicateScenarioName implements IRuleBatch {
 
     @Override
     public String getErrorMessage() {
-
-        String msg = "Duplicate scenario names detected in feature files:";
-
-        for (Map.Entry<String, Map<String, Integer>> feature : featuresWithDuplicates.entrySet())
-            msg = msg + String.format("\n Feature file: %s \n\tScenarios: %s", feature.getKey(), feature.getValue().entrySet());
-
-        return msg;
+        return "Duplicate scenario names found";
     }
 
     @Override
     public RuleCategory getCategory() {
         return DUPLICATION;
     }
+
+    @Override
+    public RunLevel getRunLevel() {
+        return RunLevel.FEATURES;
+    }
 }
+
 

@@ -4,28 +4,19 @@ import gherkin.ast.GherkinDocument;
 
 public class Feature {
 
-    String fileName;
-    GherkinDocument gherkinDocument;
+    private String path;
+    private GherkinDocument gherkinDocument;
 
-    public Feature(String fileName, GherkinDocument gherkinDocument) {
-        this.fileName = fileName;
+    public Feature(String path, GherkinDocument gherkinDocument) {
+        this.path = path;
         this.gherkinDocument = gherkinDocument;
     }
 
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public String getPath() {
+        return path;
     }
 
     public GherkinDocument getGherkinDocument() {
         return gherkinDocument;
     }
-
-    public void setGherkinDocument(GherkinDocument gherkinDocument) {
-        this.gherkinDocument = gherkinDocument;
-    }
-
 }

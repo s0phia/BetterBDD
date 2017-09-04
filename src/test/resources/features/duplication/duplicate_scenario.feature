@@ -1,4 +1,4 @@
-Feature: Rule - Duplicate Scenario Name
+Feature: Duplicate Scenario Name rule
 
   Scenario: This scenario name is a duplicate
     Given I have a feature file containing duplicate scenario names

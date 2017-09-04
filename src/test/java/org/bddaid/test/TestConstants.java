@@ -1,7 +1,7 @@
 package org.bddaid.test;
 
-public class TestConstants {
-    public static String FEATURES_DIR = "features";
-    public static String VALID_FEATURE_FILE = "valid_feature_file.feature";
+class TestConstants {
+    static final String FEATURES_DIR = "features";
+    static final String VALID_FEATURE_FILE = "valid_feature_file.feature";
 
 }

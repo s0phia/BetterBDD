@@ -8,9 +8,12 @@ import gherkin.ast.GherkinDocument;
 import org.bddaid.cli.AppArgs;
 import org.bddaid.model.Feature;
 import org.bddaid.model.result.*;
+import org.bddaid.model.result.impl.FeatureRunResult;
+import org.bddaid.model.result.impl.FeaturesRunResult;
+import org.bddaid.model.result.impl.ScenarioRunResult;
 import org.bddaid.rules.IRule;
-import org.bddaid.rules.impl.DuplicateScenarioName;
-import org.bddaid.rules.impl.EmptyFeature;
+
+import org.bddaid.rules.impl.*;
 import org.bddaid.runner.TestRunner;
 
 import java.io.*;
@@ -52,47 +55,62 @@ public class Main {
         List<File> featureFiles = getFeatureFiles(appArgs.getPath());
         List<Feature> parsedFeatures = parseFeatureFiles(featureFiles);
 
-        RunResult runResult = new TestRunner().runRules(parsedFeatures, getRules());
+        List<RunResult> runResultList = new TestRunner().runRules(parsedFeatures, getRules());
 
-        if (!runResult.isSuccess()) {
 
-            for (BDDRunResult bddRunResult : runResult.getFeatureRunResults()) {
-                if (bddRunResult instanceof FeatureRunResult) {
+        for (RunResult runResult : runResultList) {
 
-                    FeatureRunResult featureRunResult = ((FeatureRunResult) bddRunResult);
+            if (runResult instanceof FeatureRunResult) {
 
-                    System.out.println("Feature: " + featureRunResult.getFeature().getFileName() +
-                            "Result: " + bddRunResult.isSuccess());
+                FeatureRunResult featureRunResult = (FeatureRunResult) runResult;
+                System.out.printf("\nRule: %s \nFeature: %s \nResult: %s", featureRunResult.getRule().getName(),
+                        featureRunResult.getFeature().getPath(), featureRunResult.isSuccess() ? "PASS\n" : "FAIL");
 
-                    if (!bddRunResult.isSuccess()) {
-                        System.out.println("\tFailures: ");
+                if (!featureRunResult.isSuccess()) {
+                    System.out.println(" - " + featureRunResult.getRule().getErrorMessage());
 
-                        for (Failure failure : featureRunResult.getFailures()) {
-                            System.out.println("\t Rule violation: " + failure.getRule().getName() + "\n\t\t " + failure.getMessage());
+                    if (featureRunResult.getScenarioRunResultList() != null && featureRunResult.getScenarioRunResultList().size() > 0) {
+
+                        for (ScenarioRunResult scenarioRunResult : featureRunResult.getScenarioRunResultList()) {
+
+                            if (!scenarioRunResult.isSuccess())
+                                System.out.println("\t" + scenarioRunResult.getScenario());
+
                         }
-
                     }
-                } else if (bddRunResult instanceof FeaturesRunResult) {
+                }
+            } else if (runResult instanceof FeaturesRunResult) {
 
-                    FeaturesRunResult featuresRunResult = ((FeaturesRunResult) bddRunResult);
-                    if (!featuresRunResult.isSuccess()) {
+                FeaturesRunResult featuresRunResult = (FeaturesRunResult) runResult;
+                System.out.printf("\nRule: %s \nResult: %s", featuresRunResult.getRule().getName(),
+                        featuresRunResult.isSuccess() ? "PASS\n" : "FAIL");
 
-                        for (Feature feature : featuresRunResult.getFeatures()) {
-                            if (!featuresRunResult.isSuccess()) {
-                                System.out.println("\t" + feature.getFileName());
+                if (!featuresRunResult.isSuccess()) {
+                    System.out.println(" - " + featuresRunResult.getRule().getErrorMessage());
+
+
+                    if (featuresRunResult.getFeatureRunResults() != null && featuresRunResult.getFeatureRunResults().size() > 0) {
+
+                        for (FeatureRunResult featureRunResult : featuresRunResult.getFeatureRunResults()) {
+
+                            if (featureRunResult != null && !featureRunResult.isSuccess()) {
+                                System.out.printf("\tFeature: %s (%s)\n", featureRunResult.getFeature().getGherkinDocument().getFeature().getName(), featureRunResult.getFeature().getPath());
+
+                                if (featureRunResult.getScenarioRunResultList() != null) {
+                                    for (ScenarioRunResult scenarioRunResult : featureRunResult.getScenarioRunResultList()) {
+
+                                        if (!scenarioRunResult.isSuccess())
+                                            System.out.printf("\t\t%s\n", scenarioRunResult.getScenario());
+                                    }
+                                }
                             }
                         }
-                        System.out.println("\t\t Rule violation: " + featuresRunResult.getFailures().get(0).getRule().getName());
-
                     }
-                    System.out.println("\t Features: ");
-                    for (Failure failure : featuresRunResult.getFailures()) {
 
-                    }
 
                 }
+
             }
-            System.exit(1);
         }
 
     }
@@ -123,7 +141,6 @@ public class Main {
             }
 
         }
-
         if (errors.size() > 0)
             throw new RuntimeException(errors.toString());
 
@@ -136,6 +153,10 @@ public class Main {
         List<IRule> rules = new ArrayList<>();
         rules.add(new EmptyFeature());
         rules.add(new DuplicateScenarioName());
+        rules.add(new DuplicateFeatureName());
+        rules.add(new MissingVerificationStep());
+        rules.add(new TooManyScenarioSteps());
+        rules.add(new MissingScenarioSteps());
         return rules;
     }
 

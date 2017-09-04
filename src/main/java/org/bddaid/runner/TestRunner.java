@@ -1,32 +1,47 @@
 package org.bddaid.runner;
 
-import org.bddaid.model.result.BDDRunResult;
 import org.bddaid.model.Feature;
+import org.bddaid.model.enums.RunLevel;
+import org.bddaid.model.result.impl.FeatureRunResult;
+import org.bddaid.model.result.impl.FeaturesRunResult;
 import org.bddaid.model.result.RunResult;
 import org.bddaid.rules.IRule;
 import org.bddaid.rules.IRuleBatch;
 import org.bddaid.rules.IRuleSingle;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TestRunner {
 
-    public RunResult runRules(List<Feature> features, List<IRule> rules) {
+    public List<RunResult> runRules(List<Feature> features, List<IRule> rules) {
 
-        RunResult runResult = new RunResult();
-        BDDRunResult ruleRunResult;
+        List<RunResult> runResults= new ArrayList<>();
+
+        FeaturesRunResult featuresRunResult;
+        FeatureRunResult featureRunResult;
+
         for (IRule rule : rules) {
 
-            if (rule instanceof IRuleBatch) {
-                ruleRunResult = ((IRuleBatch) rule).applyRule(features);
-                runResult.addBDDRunResult(ruleRunResult);
-            } else {
+            if (rule.getRunLevel().equals(RunLevel.FEATURES)) {
+
+                IRuleBatch ruleBatch = ((IRuleBatch) rule);
+                featuresRunResult = (FeaturesRunResult) ruleBatch.applyRule(features);
+                runResults.add(featuresRunResult);
+
+            } else if (rule.getRunLevel().equals(RunLevel.FEATURE)){
+
                 for (Feature feature : features) {
-                    ruleRunResult = ((IRuleSingle) rule).applyRule(feature);
-                    runResult.addBDDRunResult(ruleRunResult);
+                    IRuleSingle ruleSingle = ((IRuleSingle) rule);
+                    featureRunResult = (FeatureRunResult)ruleSingle.applyRule(feature);
+                    runResults.add(featureRunResult);
                 }
             }
         }
-        return runResult;
+        return runResults;
     }
+
+
+
+
 }
