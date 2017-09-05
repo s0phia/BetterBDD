@@ -1,28 +1,20 @@
 package org.bddaid;
 
 import com.beust.jcommander.JCommander;
-import gherkin.AstBuilder;
-import gherkin.Parser;
-import gherkin.ParserException;
-import gherkin.ast.GherkinDocument;
 import org.bddaid.cli.AppArgs;
 import org.bddaid.model.Feature;
-import org.bddaid.model.result.*;
+import org.bddaid.model.result.RunResult;
 import org.bddaid.model.result.impl.FeatureRunResult;
 import org.bddaid.model.result.impl.FeaturesRunResult;
 import org.bddaid.model.result.impl.ScenarioRunResult;
+import org.bddaid.readers.FeatureFileReader;
+import org.bddaid.readers.RulesReader;
 import org.bddaid.rules.IRule;
-
-import org.bddaid.rules.impl.*;
 import org.bddaid.runner.TestRunner;
+import org.bddaid.utils.ParserWrapper;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.io.File;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Main {
 
@@ -52,11 +44,11 @@ public class Main {
 
     private void run() {
 
-        List<File> featureFiles = getFeatureFiles(appArgs.getPath());
-        List<Feature> parsedFeatures = parseFeatureFiles(featureFiles);
+        List<File> featureFiles = FeatureFileReader.readFiles(appArgs.getPath());
+        List<Feature> parsedFeatures = ParserWrapper.parseFeatureFiles(featureFiles);
+        List<IRule> bddRules = RulesReader.readRules();
 
-        List<RunResult> runResultList = new TestRunner().runRules(parsedFeatures, getRules());
-
+        List<RunResult> runResultList = new TestRunner().runRules(parsedFeatures, bddRules);
 
         for (RunResult runResult : runResultList) {
 
@@ -78,7 +70,11 @@ public class Main {
 
                         }
                     }
+
                 }
+
+//                new Reporter().runReport(featureRunResult);
+
             } else if (runResult instanceof FeaturesRunResult) {
 
                 FeaturesRunResult featuresRunResult = (FeaturesRunResult) runResult;
@@ -113,69 +109,7 @@ public class Main {
             }
         }
 
-    }
 
-    private List<Feature> parseFeatureFiles(List<File> featureFiles) {
-
-        List<Feature> parsedFeatures = new ArrayList<>();
-        List<String> errors = new ArrayList<>();
-        Reader reader;
-        GherkinDocument gherkinDocument;
-        Parser<GherkinDocument> parser = new Parser<>(new AstBuilder());
-
-        for (File featureFile : featureFiles) {
-
-            try {
-                reader = new FileReader(featureFile);
-                gherkinDocument = parser.parse(reader);
-                parsedFeatures.add(new Feature(featureFile.getAbsolutePath(), gherkinDocument));
-
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-
-            } catch (ParserException e) {
-
-                String message = String.format("\n\nCould not parse feature file: %s \n %s",
-                        featureFile, e.getMessage());
-                errors.add(message);
-            }
-
-        }
-        if (errors.size() > 0)
-            throw new RuntimeException(errors.toString());
-
-        return parsedFeatures;
-    }
-
-
-    private List<IRule> getRules() {
-
-        List<IRule> rules = new ArrayList<>();
-        rules.add(new EmptyFeature());
-        rules.add(new DuplicateScenarioName());
-        rules.add(new DuplicateFeatureName());
-        rules.add(new MissingVerificationStep());
-        rules.add(new TooManyScenarioSteps());
-        rules.add(new MissingScenarioSteps());
-        return rules;
-    }
-
-    private List<File> getFeatureFiles(String path) {
-        List<File> features;
-        try {
-            features = Files.walk(Paths.get(path))
-                    .filter(Files::isRegularFile)
-                    .filter(p -> p.toString().endsWith(".feature"))
-                    .map(Path::toFile)
-                    .collect(Collectors.toList());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        if (features.size() < 1)
-            throw new RuntimeException(String.format("No feature files found in given path: %s", path));
-
-        return features;
     }
 
 

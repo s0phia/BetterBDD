@@ -2,9 +2,9 @@ package org.bddaid.runner;
 
 import org.bddaid.model.Feature;
 import org.bddaid.model.enums.RunLevel;
+import org.bddaid.model.result.RunResult;
 import org.bddaid.model.result.impl.FeatureRunResult;
 import org.bddaid.model.result.impl.FeaturesRunResult;
-import org.bddaid.model.result.RunResult;
 import org.bddaid.rules.IRule;
 import org.bddaid.rules.IRuleBatch;
 import org.bddaid.rules.IRuleSingle;

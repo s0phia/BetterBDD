@@ -2,7 +2,6 @@ package org.bddaid.rules.impl;
 
 import org.bddaid.model.Feature;
 import org.bddaid.model.enums.RuleCategory;
-import org.bddaid.model.enums.RuleCategory;
 import org.bddaid.model.enums.RunLevel;
 import org.bddaid.model.result.RunResult;
 import org.bddaid.rules.IRuleSingle;
