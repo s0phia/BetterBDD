@@ -18,7 +18,7 @@ public class MissingVerificationStep extends IRuleSingle {
     public MissingVerificationStep(boolean enabled) {
         super(NAME, DESCRIPTION, ERROR_MESSAGE, CATEGORY, enabled);
     }
-    
+
     @Override
     public RunResult applyRule(Feature feature) {
         System.out.print("Rule: '" + getName() + "' is not implemented!");

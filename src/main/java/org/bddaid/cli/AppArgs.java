@@ -18,6 +18,11 @@ public class AppArgs {
             description = "Path to directory containing feature files")
     private String path = ".";
 
+    @Parameter(names = {"-r", "--rules"},
+            description = "Path to rule config .yml file")
+    private String rulesPath = ".";
+
+
     public List<String> getParameters() {
         return parameters;
     }
@@ -28,6 +33,10 @@ public class AppArgs {
 
     public String getPath() {
         return path;
+    }
+
+    public String getRulesPath() {
+        return rulesPath;
     }
 }
 

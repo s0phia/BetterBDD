@@ -46,7 +46,7 @@ public class Main {
 
         List<File> featureFiles = FeatureFileReader.readFiles(appArgs.getPath());
         List<Feature> parsedFeatures = ParserWrapper.parseFeatureFiles(featureFiles);
-        List<IRule> bddRules = RulesReader.readRules();
+        List<IRule> bddRules = RulesReader.readRules(appArgs.getRulesPath());
 
         List<RunResult> runResultList = new TestRunner().runRules(parsedFeatures, bddRules);
 
