@@ -6,7 +6,7 @@ import gherkin.pickles.Pickle;
 import org.bddaid.model.Feature;
 import org.bddaid.model.enums.RuleCategory;
 import org.bddaid.model.enums.RunLevel;
-import org.bddaid.model.result.*;
+import org.bddaid.model.result.RunResult;
 import org.bddaid.model.result.impl.FeatureRunResult;
 import org.bddaid.model.result.impl.FeaturesRunResult;
 import org.bddaid.model.result.impl.ScenarioRunResult;
@@ -19,9 +19,18 @@ import java.util.Map;
 
 import static org.bddaid.model.enums.RuleCategory.DUPLICATION;
 
-public class DuplicateScenarioName implements IRuleBatch {
+public class DuplicateScenarioName extends IRuleBatch {
 
-     private List<Feature> featuresWithDuplicates = new ArrayList<>();
+    private List<Feature> featuresWithDuplicates = new ArrayList<>();
+
+    private static final String NAME = "duplicate_scenario_name";
+    private static final String DESCRIPTION = "This rule prevents feature files having duplicate scenario names";
+    private static final String ERROR_MESSAGE = "Duplicate scenarios names found";
+    private static final RuleCategory CATEGORY = DUPLICATION;
+
+    public DuplicateScenarioName(boolean enabled) {
+        super(NAME, DESCRIPTION, ERROR_MESSAGE, CATEGORY, enabled);
+    }
 
     @Override
     public RunResult applyRule(List<Feature> features) {
@@ -68,36 +77,11 @@ public class DuplicateScenarioName implements IRuleBatch {
             } else {
                 //TODO: log warning
             }
-         }
+        }
         boolean success = featuresWithDuplicates.size() <= 0;
 
         return new FeaturesRunResult(success, this, featureRunResultList);
 
-    }
-
-    @Override
-    public String getName() {
-        return "duplicate_scenario_name";
-    }
-
-    @Override
-    public String getDescription() {
-        return "This rule prevents feature files having duplicate scenario names";
-    }
-
-    @Override
-    public String getErrorMessage() {
-        return "Duplicate scenario names found";
-    }
-
-    @Override
-    public RuleCategory getCategory() {
-        return DUPLICATION;
-    }
-
-    @Override
-    public RunLevel getRunLevel() {
-        return RunLevel.FEATURES;
     }
 }
 

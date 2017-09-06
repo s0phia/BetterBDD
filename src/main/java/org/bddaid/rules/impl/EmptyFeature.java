@@ -13,7 +13,18 @@ import java.util.List;
 
 import static org.bddaid.model.enums.RuleCategory.REDUNDANCY;
 
-public class EmptyFeature implements IRuleSingle {
+public class EmptyFeature extends IRuleSingle {
+
+    private static final String NAME = "empty-feature-file";
+    private static final String DESCRIPTION = "This rule prevents empty feature files";
+    private static final String ERROR_MESSAGE = "Feature file is empty";
+    private static final RuleCategory CATEGORY = REDUNDANCY;
+
+
+    public EmptyFeature(boolean enabled) {
+        super(NAME, DESCRIPTION, ERROR_MESSAGE, CATEGORY, enabled);
+    }
+
 
     @Override
     public FeatureRunResult applyRule(Feature feature) {
@@ -23,37 +34,11 @@ public class EmptyFeature implements IRuleSingle {
         List<Pickle> pickles = new Compiler().compile(gherkinDocument);
 
         if (pickles.size() < 1) {
-             success = false;
+            success = false;
         }
 
         return new FeatureRunResult(success, this, feature);
     }
-
-    @Override
-    public String getName() {
-        return "empty_feature_file";
-    }
-
-    @Override
-    public String getDescription() {
-        return "This rule prevents empty feature files";
-    }
-
-    @Override
-    public String getErrorMessage() {
-        return ("Feature file is empty");
-    }
-
-    @Override
-    public RuleCategory getCategory() {
-        return REDUNDANCY;
-    }
-
-    @Override
-    public RunLevel getRunLevel() {
-        return RunLevel.FEATURE;
-    }
-
 
 }
 

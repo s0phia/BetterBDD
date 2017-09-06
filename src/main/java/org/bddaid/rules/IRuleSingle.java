@@ -1,11 +1,21 @@
 package org.bddaid.rules;
 
 import org.bddaid.model.Feature;
+import org.bddaid.model.enums.RuleCategory;
+import org.bddaid.model.enums.RunLevel;
 import org.bddaid.model.result.RunResult;
 
-public interface IRuleSingle extends  IRule{
+public abstract class IRuleSingle extends  IRule{
 
-    RunResult applyRule(Feature feature);
+    public IRuleSingle(String name, String description, String errorMessage, RuleCategory category, boolean enabled) {
+        super(name, description, errorMessage, category, enabled);
+    }
+
+    public abstract RunResult applyRule(Feature feature);
+
+    public RunLevel getRunLevel() {
+        return RunLevel.FEATURE;
+    }
 
 }
 
