@@ -8,12 +8,14 @@ import org.bddaid.model.result.impl.FeatureRunResult;
 import org.bddaid.model.result.impl.FeaturesRunResult;
 import org.bddaid.model.result.impl.ScenarioRunResult;
 import org.bddaid.readers.FeatureFileReader;
-import org.bddaid.readers.RulesReader;
+import org.bddaid.readers.RuleConfigReader;
 import org.bddaid.rules.IRule;
 import org.bddaid.runner.TestRunner;
 import org.bddaid.utils.ParserWrapper;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -46,21 +48,36 @@ public class Main {
 
         List<File> featureFiles = FeatureFileReader.readFiles(appArgs.getPath());
         List<Feature> parsedFeatures = ParserWrapper.parseFeatureFiles(featureFiles);
-        List<IRule> bddRules = RulesReader.readRules(appArgs.getRulesPath());
+        List<IRule> bddRules = new ArrayList<>();
 
-        List<RunResult> runResultList = new TestRunner().runRules(parsedFeatures, bddRules);
+
+        try {
+            bddRules = RuleConfigReader.readRules(appArgs.getRulesPath());
+        } catch (IOException | IllegalArgumentException e) {
+            throw new RuntimeException(e);
+        }
+
+       // BDDRunResult runResultList = new TestRunner().runRules(parsedFeatures, bddRules);
+        List<RunResult>  runResultList = new TestRunner().runRules(parsedFeatures, bddRules);
+        int passedRules = 0;
+        int failedRules = 0;
+
+//        System.out.printf("\nFeature analysed: %s \nFeatures passed: %s \nResult: %s", runResultList.getFeatureRunResultList(),
+//                runResultList.getPassedFeatureResults(),  runResultList.getFailedFeatureResults());
+//        new Reporter().runReport(bddRules, featureFiles, runResultList);
+
 
         for (RunResult runResult : runResultList) {
 
             if (runResult instanceof FeatureRunResult) {
 
                 FeatureRunResult featureRunResult = (FeatureRunResult) runResult;
-                System.out.printf("\nRule: %s \nFeature: %s \nResult: %s", featureRunResult.getRule().getName(),
+                System.out.printf("\nrule: %s \nFeature: %s \nResult: %s", featureRunResult.getRule().getRule(),
                         featureRunResult.getFeature().getPath(), featureRunResult.isSuccess() ? "PASS\n" : "FAIL");
-
+                 passedRules++;
                 if (!featureRunResult.isSuccess()) {
                     System.out.println(" - " + featureRunResult.getRule().getErrorMessage());
-
+                    passedRules++;
                     if (featureRunResult.getScenarioRunResultList() != null && featureRunResult.getScenarioRunResultList().size() > 0) {
 
                         for (ScenarioRunResult scenarioRunResult : featureRunResult.getScenarioRunResultList()) {
@@ -69,16 +86,17 @@ public class Main {
                                 System.out.println("\t" + scenarioRunResult.getScenario());
 
                         }
+                        failedRules++;
                     }
 
                 }
 
-//                new Reporter().runReport(featureRunResult);
+              //  new Reporter().runReport(bddRules, featureFiles, featureRunResult, passedRules, failedRules);
 
             } else if (runResult instanceof FeaturesRunResult) {
 
                 FeaturesRunResult featuresRunResult = (FeaturesRunResult) runResult;
-                System.out.printf("\nRule: %s \nResult: %s", featuresRunResult.getRule().getName(),
+                System.out.printf("\nrule: %s \nResult: %s", featuresRunResult.getRule().getRule(),
                         featuresRunResult.isSuccess() ? "PASS\n" : "FAIL");
 
                 if (!featuresRunResult.isSuccess()) {
@@ -111,8 +129,6 @@ public class Main {
 
 
     }
-
-
 }
 
 

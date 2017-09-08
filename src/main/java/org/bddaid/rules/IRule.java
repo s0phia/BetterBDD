@@ -1,36 +1,30 @@
 package org.bddaid.rules;
 
+import org.bddaid.model.enums.Rule;
 import org.bddaid.model.enums.RuleCategory;
 import org.bddaid.model.enums.RunLevel;
 
 public abstract class IRule {
 
-    protected String name;
+    protected Rule rule;
     protected String description;
     private String errorMessage;
-    private RuleCategory category;
-
-    private boolean enabled;
+    private RuleCategory category;;
     private RunLevel runLevel;
 
-    public IRule(String name, String description, String errorMessage, RuleCategory category, boolean enabled) {
-        this.name = name;
+    public IRule(Rule Rule, String description, String errorMessage, RuleCategory category) {
+        this.rule = Rule;
         this.category = category;
-        this.enabled = enabled;
         this.description = description;
         this.errorMessage = errorMessage;
     }
 
-    public IRule( boolean enabled) {
-        this.enabled = enabled;
+    public Rule getRule() {
+        return rule;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setRule(Rule rule) {
+        this.rule = rule;
     }
 
     public String getDescription() {
@@ -55,14 +49,6 @@ public abstract class IRule {
 
     public void setCategory(RuleCategory category) {
         this.category = category;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 
     public RunLevel getRunLevel() {

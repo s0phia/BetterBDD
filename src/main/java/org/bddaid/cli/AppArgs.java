@@ -19,7 +19,7 @@ public class AppArgs {
     private String path = ".";
 
     @Parameter(names = {"-r", "--rules"},
-            description = "Path to rule config .yml file")
+            description = "Path to rules config .yml file")
     private String rulesPath = ".";
 
 

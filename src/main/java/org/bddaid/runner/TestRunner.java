@@ -16,8 +16,7 @@ public class TestRunner {
 
     public List<RunResult> runRules(List<Feature> features, List<IRule> rules) {
 
-        List<RunResult> runResults= new ArrayList<>();
-
+        List<RunResult> runResults = new ArrayList<>();
         FeaturesRunResult featuresRunResult;
         FeatureRunResult featureRunResult;
 
@@ -29,19 +28,18 @@ public class TestRunner {
                 featuresRunResult = (FeaturesRunResult) ruleBatch.applyRule(features);
                 runResults.add(featuresRunResult);
 
-            } else if (rule.getRunLevel().equals(RunLevel.FEATURE)){
+            } else if (rule.getRunLevel().equals(RunLevel.FEATURE)) {
 
                 for (Feature feature : features) {
                     IRuleSingle ruleSingle = ((IRuleSingle) rule);
-                    featureRunResult = (FeatureRunResult)ruleSingle.applyRule(feature);
+                    featureRunResult = (FeatureRunResult) ruleSingle.applyRule(feature);
                     runResults.add(featureRunResult);
-                }
+                 }
+
             }
         }
         return runResults;
     }
-
-
 
 
 }

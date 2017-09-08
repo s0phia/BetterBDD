@@ -1,8 +1,8 @@
 package org.bddaid.rules.impl;
 
 import org.bddaid.model.Feature;
+import org.bddaid.model.enums.Rule;
 import org.bddaid.model.enums.RuleCategory;
-import org.bddaid.model.enums.RunLevel;
 import org.bddaid.model.result.RunResult;
 import org.bddaid.model.result.impl.FeatureRunResult;
 import org.bddaid.model.result.impl.FeaturesRunResult;
@@ -13,25 +13,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.bddaid.model.enums.Rule.duplicate_feature_name;
 import static org.bddaid.model.enums.RuleCategory.DUPLICATION;
 
 public class DuplicateFeatureName extends IRuleBatch {
 
-    private static final String NAME = "duplicate_feature_name";
-    private static final String DESCRIPTION = "This rule prevents feature names in feature files";
+    private static final Rule Rule = duplicate_feature_name;
+    private static final String DESCRIPTION = duplicate_feature_name.description();
     private static final String ERROR_MESSAGE = "Duplicate feature names found";
     private static final RuleCategory CATEGORY = DUPLICATION;
 
-    public DuplicateFeatureName(boolean enabled) {
-        super(NAME, DESCRIPTION, ERROR_MESSAGE, CATEGORY, enabled);
+    public DuplicateFeatureName() {
+        super(Rule, DESCRIPTION, ERROR_MESSAGE, CATEGORY);
     }
 
     @Override
     public RunResult applyRule(List<Feature> features) {
         List<Feature> featuresWithDuplicates = new ArrayList<>();
-
-        boolean success = false;
         List<FeatureRunResult> featureRunResultList = new ArrayList<>();
+        boolean success = false;
 
         Map<String, Integer> frequency = new HashMap<>();
 
@@ -67,8 +67,9 @@ public class DuplicateFeatureName extends IRuleBatch {
             success = true;
 
         return new FeaturesRunResult(success, this, featureRunResultList);
-
     }
+
+
 
 
 }

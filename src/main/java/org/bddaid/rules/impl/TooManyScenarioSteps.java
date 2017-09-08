@@ -4,8 +4,8 @@ import gherkin.ast.GherkinDocument;
 import gherkin.pickles.Compiler;
 import gherkin.pickles.Pickle;
 import org.bddaid.model.Feature;
+import org.bddaid.model.enums.Rule;
 import org.bddaid.model.enums.RuleCategory;
-import org.bddaid.model.enums.RunLevel;
 import org.bddaid.model.result.RunResult;
 import org.bddaid.model.result.impl.FeatureRunResult;
 import org.bddaid.model.result.impl.ScenarioRunResult;
@@ -14,18 +14,19 @@ import org.bddaid.rules.IRuleSingle;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.bddaid.model.enums.Rule.too_many_scenario_steps;
 import static org.bddaid.model.enums.RuleCategory.NON_DECLARATIVE;
-import static org.bddaid.model.enums.RuleCategory.REDUNDANCY;
 
 public class TooManyScenarioSteps extends IRuleSingle {
 
-    private static final String NAME = "too_many_scenario_steps";
-    private static final String DESCRIPTION = "Prevents scenarios with an excessive number of steps";
-    private static final String ERROR_MESSAGE = "Scenario with too many steps found";
+    private static final Rule RULE_NAME = too_many_scenario_steps;
+    private static final String DESCRIPTION = too_many_scenario_steps.description();
+    private static final String ERROR_MESSAGE = "Scenarios with too many steps found";
     private static final RuleCategory CATEGORY = NON_DECLARATIVE;
+    private int maxSteps = 8;
 
-    public TooManyScenarioSteps(boolean enabled) {
-        super(NAME, DESCRIPTION, ERROR_MESSAGE, CATEGORY, enabled);
+    public TooManyScenarioSteps() {
+        super(RULE_NAME, DESCRIPTION, ERROR_MESSAGE, CATEGORY);
     }
 
     @Override
@@ -41,7 +42,7 @@ public class TooManyScenarioSteps extends IRuleSingle {
         if (pickles.size() > 0) {
 
             for (Pickle pickle : pickles) {
-                if (pickle.getSteps().size() > 10) {
+                if (pickle.getSteps().size() > maxSteps) {
                     scenarioRunResultList.add(new ScenarioRunResult(false, this, pickle.getName()));
                     success = false;
                 } else {
@@ -50,37 +51,17 @@ public class TooManyScenarioSteps extends IRuleSingle {
                 }
             }
 
-
         }
 
         return new FeatureRunResult(success, this, feature, scenarioRunResultList);
-
-
     }
 
-    @Override
-    public String getName() {
-        return "too_many_scenario_steps";
+    public int getMaxSteps() {
+        return maxSteps;
     }
 
-    @Override
-    public String getDescription() {
-        return "This rule prevents scenarios with an excessive number of steps";
-    }
-
-    @Override
-    public String getErrorMessage() {
-        return "Scenario with too many steps found";
-    }
-
-    @Override
-    public RuleCategory getCategory() {
-        return NON_DECLARATIVE;
-    }
-
-    @Override
-    public RunLevel getRunLevel() {
-        return RunLevel.FEATURE;
+    public void setMaxSteps(int maxSteps) {
+        this.maxSteps = maxSteps;
     }
 }
 

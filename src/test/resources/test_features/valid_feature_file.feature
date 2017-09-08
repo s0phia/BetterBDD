@@ -9,3 +9,4 @@ Feature: A valid feature file
     Given an initial context 2
     When an event 2
     Then an expected outcome 2
+
