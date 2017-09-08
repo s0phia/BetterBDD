@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 
-import static org.bddaid.test.TestConstants.FEATURES_DIR;
+import static org.bddaid.test.TestConstants.FEATURES_BASE_PATH;
 import static org.bddaid.test.TestConstants.VALID_FEATURE_FILE;
 
 public class PathValidatorTest {
@@ -33,13 +33,13 @@ public class PathValidatorTest {
 
     @Test
     public void should_NotThrowError_When_DirectoryDoesExist() {
-        File file = new File(classLoader.getResource(FEATURES_DIR).getFile());
+        File file = new File(classLoader.getResource(FEATURES_BASE_PATH).getFile());
         Assert.assertEquals(file.exists(), true);
     }
 
     @Test
     public void should_NotThrowError_When_FileDoesExist() {
-        File file = new File(classLoader.getResource(FEATURES_DIR + "/valid/" + VALID_FEATURE_FILE).getFile());
+        File file = new File(classLoader.getResource(FEATURES_BASE_PATH + "/valid/" + VALID_FEATURE_FILE).getFile());
         Assert.assertEquals(file.getName(), VALID_FEATURE_FILE);
     }
 
