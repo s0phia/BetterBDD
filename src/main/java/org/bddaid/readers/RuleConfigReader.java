@@ -2,8 +2,6 @@ package org.bddaid.readers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
 import org.bddaid.model.enums.Rule;
 import org.bddaid.rules.IRule;
 import org.bddaid.rules.impl.*;
@@ -26,8 +24,8 @@ public class RuleConfigReader {
 
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         List configList = mapper.readValue(new File(filePath), ArrayList.class);
-        LogManager.getLogger().
-                log(Level.DEBUG, String.format("rule configuration read from file:%s %n%s", filePath, configList));
+        //LogManager.getLogger().
+         ///       log(Level.DEBUG, String.format("rule configuration read from file:%s %n%s", filePath, configList));
 
         List<IRule> rules = new ArrayList<>();
         for (Object ruleConfigList : ((ArrayList) configList)) {
@@ -36,7 +34,7 @@ public class RuleConfigReader {
 
             String ruleName = ruleConfigMap.get(RULE_KEY).toString();
 
-            Boolean isEnabled = ruleConfigMap.get(ENABLED_KEY) != null ?
+            Boolean isRuleEnabled = ruleConfigMap.get(ENABLED_KEY) != null ?
                     Boolean.valueOf(ruleConfigMap.get(ENABLED_KEY).toString()) : false;
 
 
@@ -49,53 +47,58 @@ public class RuleConfigReader {
                         ruleName, (Rule.printRules()));
                 throw new IllegalArgumentException(errorMessage);
             }
-            switch (rule) {
 
-                case empty_feature_file:
-                    rules.add(new EmptyFeature(isEnabled));
-                    break;
+            if (isRuleEnabled) {
 
-                case duplicate_scenario_name:
-                    rules.add(new DuplicateScenarioName(isEnabled));
-                    break;
+                switch (rule) {
 
-                case duplicate_feature_name:
-                    rules.add(new DuplicateFeatureName(isEnabled));
-                    break;
+                    case empty_feature_file:
+                        rules.add(new EmptyFeature());
+                        break;
 
-                case bad_feature_name:
-                    BadFeatureName badFeatureNameRule = new BadFeatureName(isEnabled);
-                    if (ruleConfigMap.containsKey(MIN_WORDS_KEY))
-                        badFeatureNameRule.setMinWords(Integer.valueOf(ruleConfigMap
-                                .get(MIN_WORDS_KEY).toString()));
-                    rules.add(badFeatureNameRule);
-                    break;
-                case bad_scenario_name:
-                    BadScenarioName badScenarioNameRule = new BadScenarioName(isEnabled);
-                    if (ruleConfigMap.containsKey(MIN_WORDS_KEY))
-                        badScenarioNameRule.setMinWords(Integer.valueOf(ruleConfigMap
-                                .get(MIN_WORDS_KEY).toString()));
-                    rules.add(badScenarioNameRule);
-                    break;
-                case too_many_scenario_steps:
-                    TooManyScenarioSteps bddRule = new TooManyScenarioSteps(isEnabled);
-                    if (ruleConfigMap.containsKey(MAX_STEPS_KEY))
-                        bddRule.setMaxSteps(Integer.valueOf(ruleConfigMap.get(MAX_STEPS_KEY).toString()));
-                    rules.add(new MissingScenarioSteps(isEnabled));
-                    break;
+                    case duplicate_scenario_name:
+                        rules.add(new DuplicateScenarioName());
+                        break;
 
-                case missing_action_step:
-                    //TODO:   rules.add(new TooManyScenarioSteps(isEnabled));
-                    break;
+                    case duplicate_feature_name:
 
-                case missing_verification_step:
-                    //TODO:  rules.add(new BadScenarioName(isEnabled));
-                    break;
+                        rules.add(new DuplicateFeatureName());
+                        break;
 
-                case missing_scenario_steps:
-                    //TODO: rules.add(new BadScenarioName(isEnabled));
-                    break;
+                    case bad_feature_name:
+                        BadFeatureName badFeatureNameRule = new BadFeatureName();
+                        if (ruleConfigMap.containsKey(MIN_WORDS_KEY))
+                            badFeatureNameRule.setMinWords(Integer.valueOf(ruleConfigMap
+                                    .get(MIN_WORDS_KEY).toString()));
+                        rules.add(badFeatureNameRule);
+                        break;
+                    case bad_scenario_name:
+                        BadScenarioName badScenarioNameRule = new BadScenarioName();
+                        if (ruleConfigMap.containsKey(MIN_WORDS_KEY))
+                            badScenarioNameRule.setMinWords(Integer.valueOf(ruleConfigMap
+                                    .get(MIN_WORDS_KEY).toString()));
+                        rules.add(badScenarioNameRule);
+                        break;
+                    case too_many_scenario_steps:
+                        TooManyScenarioSteps bddRule = new TooManyScenarioSteps();
+                        if (ruleConfigMap.containsKey(MAX_STEPS_KEY))
+                            bddRule.setMaxSteps(Integer.valueOf(ruleConfigMap.get(MAX_STEPS_KEY).toString()));
+                        rules.add(new MissingScenarioSteps());
+                        break;
 
+                    case missing_action_step:
+                        //TODO:   rules.add(new TooManyScenarioSteps(isEnabled));
+                        break;
+
+                    case missing_verification_step:
+                        //TODO:  rules.add(new BadScenarioName(isEnabled));
+                        break;
+
+                    case missing_scenario_steps:
+                        //TODO: rules.add(new BadScenarioName(isEnabled));
+                        break;
+
+                }
             }
         }
         return rules;
