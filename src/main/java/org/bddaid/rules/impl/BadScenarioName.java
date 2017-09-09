@@ -5,6 +5,7 @@ import gherkin.ast.ScenarioDefinition;
 import org.bddaid.model.Feature;
 import org.bddaid.model.enums.Rule;
 import org.bddaid.model.enums.RuleCategory;
+import org.bddaid.model.enums.RunLevel;
 import org.bddaid.model.result.RunResult;
 import org.bddaid.model.result.impl.FeatureRunResult;
 import org.bddaid.model.result.impl.ScenarioRunResult;
@@ -20,6 +21,7 @@ public class BadScenarioName extends IRuleSingle {
 
     private static final Rule RULE_NAME = bad_scenario_name;
     private static final String DESCRIPTION = bad_scenario_name.description();
+    private static final RunLevel RUN_LEVEL = RunLevel.SCENARIO;
     private static final String ERROR_MESSAGE = "Bad scenario names found";
     private static final RuleCategory CATEGORY = COHERENCE;
 
@@ -61,6 +63,10 @@ public class BadScenarioName extends IRuleSingle {
 
     public void setMinWords(int minWords) {
         this.minWords = minWords;
+    }
+
+    public RunLevel getRunLevel() {
+        return this.RUN_LEVEL;
     }
 }
 

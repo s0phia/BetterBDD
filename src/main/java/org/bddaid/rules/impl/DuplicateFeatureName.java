@@ -69,9 +69,6 @@ public class DuplicateFeatureName extends IRuleBatch {
         return new FeaturesRunResult(success, this, featureRunResultList);
     }
 
-
-
-
 }
 
 

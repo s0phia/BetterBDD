@@ -19,7 +19,6 @@ public class BadFeatureName extends IRuleSingle {
     private static final RuleCategory CATEGORY = COHERENCE;
     private int minWords = 13;
 
-
     public BadFeatureName() {
         super(RULE_NAME, DESCRIPTION, ERROR_MESSAGE, CATEGORY);
         setMinWords(3);
@@ -46,5 +45,6 @@ public class BadFeatureName extends IRuleSingle {
     public void setMinWords(int minWords) {
         this.minWords = minWords;
     }
+
 }
 

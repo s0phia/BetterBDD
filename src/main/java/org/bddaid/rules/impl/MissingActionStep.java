@@ -11,7 +11,6 @@ import static org.bddaid.model.enums.RuleCategory.NON_DECLARATIVE;
 
 public class MissingActionStep extends IRuleSingle {
 
-
     private static final Rule RULE = missing_action_step;
     private static final String DESCRIPTION = missing_action_step.description();
     private static final String ERROR_MESSAGE = "Scenarios with no 'When' action step found";
@@ -27,7 +26,6 @@ public class MissingActionStep extends IRuleSingle {
         //TODO: log warning
         return null;
     }
-
 
 }
 

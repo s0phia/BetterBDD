@@ -13,7 +13,7 @@ public class PathValidator implements IParameterValidator {
     public void validate(String name, String value) throws ParameterException {
         Path filePath = Paths.get(value);
         if (!(Files.exists(filePath))) {
-            String message = String.format("Directory does no exist: [%s]", filePath);
+            String message = String.format("Directory does not exist: [%s]", filePath);
             throw new ParameterException(message);
         }
     }

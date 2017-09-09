@@ -17,7 +17,6 @@ public class EmptyFeature extends IRuleSingle {
     private static final String ERROR_MESSAGE = "Empty Feature files found";
     private static final RuleCategory CATEGORY = REDUNDANCY;
 
-
     public EmptyFeature() {
         super(NAME, DESCRIPTION, ERROR_MESSAGE, CATEGORY);
     }
@@ -25,12 +24,15 @@ public class EmptyFeature extends IRuleSingle {
     @Override
     public FeatureRunResult applyRule(Feature feature) {
 
-        boolean success = true;
+        boolean success;
         GherkinDocument gherkinDocument = feature.getGherkinDocument();
 
-        if (gherkinDocument.getFeature() != null &&
-                gherkinDocument.getFeature().getChildren().size() < 1)
+        if (gherkinDocument.getFeature() == null)
             success = false;
+        else if (gherkinDocument.getFeature().getChildren().size() < 1)
+            success = false;
+        else
+            success = true;
 
         return new FeatureRunResult(success, this, feature);
     }

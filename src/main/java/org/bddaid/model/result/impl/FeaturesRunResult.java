@@ -3,6 +3,7 @@ package org.bddaid.model.result.impl;
 import org.bddaid.model.result.RunResult;
 import org.bddaid.rules.IRule;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FeaturesRunResult implements RunResult {
@@ -31,5 +32,18 @@ public class FeaturesRunResult implements RunResult {
 
     public void setFeatureRunResults(List<FeatureRunResult> featureRunResults) {
         this.featureRunResults = featureRunResults;
+    }
+
+
+    public List<FeatureRunResult> getFailedFeatureRunResults() {
+
+        List<FeatureRunResult> failedFeatureRunResults = new ArrayList<>();
+
+            for (FeatureRunResult fr : featureRunResults) {
+                if (!fr.isSuccess())
+                    failedFeatureRunResults.add(fr);
+            }
+
+        return failedFeatureRunResults;
     }
 }

@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 
 public class FeatureFileReader {
 
-    public static List<File> readFiles(String path) {
+    public static List<File> readFiles(File path) {
         List<File> features;
         try {
-            features = Files.walk(Paths.get(path))
+            features = Files.walk(Paths.get(path.toURI()))
                     .filter(Files::isRegularFile)
                     .filter(p -> p.toString().endsWith(".feature"))
                     .map(Path::toFile)
@@ -27,8 +27,6 @@ public class FeatureFileReader {
 
         return features;
     }
-
-
 }
 
 

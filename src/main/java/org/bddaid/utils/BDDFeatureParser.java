@@ -5,6 +5,7 @@ import gherkin.Parser;
 import gherkin.ParserException;
 import gherkin.ast.GherkinDocument;
 import org.bddaid.model.Feature;
+import org.bddaid.readers.FeatureFileReader;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,7 +14,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParserWrapper {
+public class BDDFeatureParser {
 
     static List<String> errors = new ArrayList<>();
 
@@ -22,8 +23,9 @@ public class ParserWrapper {
         return parseFeatureFile(featureFile);
     }
 
-    public static List<Feature> parseFeatureFiles(List<File> featureFiles) {
+    public static List<Feature> parseFiles(File filepath) {
 
+        List<File> featureFiles = FeatureFileReader.readFiles(filepath);
         List<Feature> parsedFeatures = new ArrayList<>();
 
         for (File featureFile : featureFiles)
@@ -58,4 +60,7 @@ public class ParserWrapper {
 
         return parsedFeature;
     }
+
+
+
 }

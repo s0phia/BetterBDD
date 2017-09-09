@@ -83,6 +83,7 @@ public class DuplicateScenarioName extends IRuleBatch {
         return new FeaturesRunResult(success, this, featureRunResultList);
 
     }
+
 }
 
 

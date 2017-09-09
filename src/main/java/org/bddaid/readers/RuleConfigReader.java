@@ -8,10 +8,7 @@ import org.bddaid.rules.impl.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RuleConfigReader {
 
@@ -20,14 +17,15 @@ public class RuleConfigReader {
     private static String MIN_WORDS_KEY = "min_words";
     private static String MAX_STEPS_KEY = "max_steps";
 
-    public static List<IRule> readRules(String filePath) throws RuntimeException, IOException {
+    //here i used a set as opposed to list as there shuould not be any duplicat entryies is each rule should be uniguw
+    public static Set<IRule> readRules(File file) throws RuntimeException, IOException {
 
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-        List configList = mapper.readValue(new File(filePath), ArrayList.class);
+        List configList = mapper.readValue(file, ArrayList.class);
         //LogManager.getLogger().
          ///       log(Level.DEBUG, String.format("rule configuration read from file:%s %n%s", filePath, configList));
 
-        List<IRule> rules = new ArrayList<>();
+        Set<IRule> rules = new HashSet<>();
         for (Object ruleConfigList : ((ArrayList) configList)) {
 
             Map<String, Object> ruleConfigMap = (HashMap<String, Object>) ruleConfigList;
@@ -83,7 +81,7 @@ public class RuleConfigReader {
                         TooManyScenarioSteps bddRule = new TooManyScenarioSteps();
                         if (ruleConfigMap.containsKey(MAX_STEPS_KEY))
                             bddRule.setMaxSteps(Integer.valueOf(ruleConfigMap.get(MAX_STEPS_KEY).toString()));
-                        rules.add(new MissingScenarioSteps());
+                        rules.add(new TooManyScenarioSteps());
                         break;
 
                     case missing_action_step:

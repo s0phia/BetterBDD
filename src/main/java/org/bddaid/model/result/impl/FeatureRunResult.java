@@ -4,6 +4,7 @@ import org.bddaid.model.Feature;
 import org.bddaid.model.result.RunResult;
 import org.bddaid.rules.IRule;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FeatureRunResult implements RunResult {
@@ -50,4 +51,19 @@ public class FeatureRunResult implements RunResult {
     public void setScenarioRunResultList(List<ScenarioRunResult> scenarioRunResultList) {
         this.scenarioRunResultList = scenarioRunResultList;
     }
+
+
+    public List<ScenarioRunResult> getFailedScenarios() {
+
+        List<ScenarioRunResult> failedScenarios = new ArrayList<>();
+
+        if (scenarioRunResultList != null) {
+            for (ScenarioRunResult fs : scenarioRunResultList) {
+                if (!fs.isSuccess())
+                    failedScenarios.add(fs);
+            }
+        }
+        return failedScenarios;
+    }
+
 }
