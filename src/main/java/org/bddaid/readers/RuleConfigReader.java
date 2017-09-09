@@ -81,19 +81,19 @@ public class RuleConfigReader {
                         TooManyScenarioSteps bddRule = new TooManyScenarioSteps();
                         if (ruleConfigMap.containsKey(MAX_STEPS_KEY))
                             bddRule.setMaxSteps(Integer.valueOf(ruleConfigMap.get(MAX_STEPS_KEY).toString()));
-                        rules.add(new TooManyScenarioSteps());
+                        rules.add(bddRule);
                         break;
 
                     case missing_action_step:
-                        //TODO:   rules.add(new TooManyScenarioSteps(isEnabled));
+                        rules.add(new MissingActionStep());
                         break;
 
                     case missing_verification_step:
-                        //TODO:  rules.add(new BadScenarioName(isEnabled));
+                        rules.add(new MissingVerificationStep());
                         break;
 
                     case missing_scenario_steps:
-                        //TODO: rules.add(new BadScenarioName(isEnabled));
+                        rules.add(new MissingScenarioSteps());
                         break;
 
                 }

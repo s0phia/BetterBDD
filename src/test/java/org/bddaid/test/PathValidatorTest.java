@@ -27,7 +27,7 @@ public class PathValidatorTest {
             PathValidator filePathValidator = new PathValidator();
             filePathValidator.validate("-p", path);
         } catch (ParameterException e) {
-            Assert.assertEquals(e.getMessage(), String.format("Directory does no exist: [%s]", path));
+            Assert.assertEquals(e.getMessage(), String.format("Directory does not exist: [%s]", path));
         }
     }
 
