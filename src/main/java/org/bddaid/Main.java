@@ -34,8 +34,8 @@ public class Main {
         Set<IRule> bddRules = RuleConfigReader.readRules(new File(appArgs.getRulesPath()));
 
         BDDRunResult runResult = new BDDRuleRunner().runRules(parsedFeatures, bddRules);
-
-        new Reporter().printReport(runResult, ReportFormat.CONSOLE);
+        Reporter reporter = new Reporter(ReportFormat.HTML);
+        reporter.printReport(runResult);
     }
 
 

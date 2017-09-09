@@ -23,6 +23,10 @@ public abstract class IRule {
         return rule;
     }
 
+    public String getName() {
+        return rule.name();
+    }
+
     public void setRule(Rule rule) {
         this.rule = rule;
     }
@@ -58,6 +62,7 @@ public abstract class IRule {
     public void setRunLevel(RunLevel runLevel) {
         this.runLevel = runLevel;
     }
+
 
 }
 

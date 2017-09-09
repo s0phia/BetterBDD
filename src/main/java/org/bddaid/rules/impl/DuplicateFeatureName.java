@@ -18,13 +18,13 @@ import static org.bddaid.model.enums.RuleCategory.DUPLICATION;
 
 public class DuplicateFeatureName extends IRuleBatch {
 
-    private static final Rule Rule = duplicate_feature_name;
+    private static final Rule RULE = duplicate_feature_name;
     private static final String DESCRIPTION = duplicate_feature_name.description();
     private static final String ERROR_MESSAGE = "Duplicate feature names found";
     private static final RuleCategory CATEGORY = DUPLICATION;
 
     public DuplicateFeatureName() {
-        super(Rule, DESCRIPTION, ERROR_MESSAGE, CATEGORY);
+        super(RULE, DESCRIPTION, ERROR_MESSAGE, CATEGORY);
     }
 
     @Override
