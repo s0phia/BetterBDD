@@ -2,6 +2,8 @@ package org.bddaid.readers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 import org.bddaid.model.enums.Rule;
 import org.bddaid.rules.IRule;
 import org.bddaid.rules.impl.*;
@@ -22,8 +24,9 @@ public class RuleConfigReader {
 
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         List configList = mapper.readValue(file, ArrayList.class);
-        //LogManager.getLogger().
-         ///       log(Level.DEBUG, String.format("rule configuration read from file:%s %n%s", filePath, configList));
+
+        LogManager.getLogger().log(Level.DEBUG,
+                String.format("rule configuration read from file:%s %n%s", file.getPath(), configList));
 
         Set<IRule> rules = new HashSet<>();
         for (Object ruleConfigList : ((ArrayList) configList)) {
@@ -99,6 +102,7 @@ public class RuleConfigReader {
                 }
             }
         }
+
         return rules;
     }
 

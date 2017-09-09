@@ -17,6 +17,7 @@
         <com.fasterxml.jackson.dataformat.version>2.3.0</com.fasterxml.jackson.dataformat.version>
         <com.fasterxml.jackson.core.version>2.2.3</com.fasterxml.jackson.core.version>
         <org.apache.commons.version>3.4</org.apache.commons.version>
+        <org.apache.logging.log4j.version>2.9.0</org.apache.logging.log4j.version>
     </properties>
     <build>
         <plugins>
@@ -72,6 +73,12 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${org.apache.commons.version}</version>
+        </dependency>
+        <!-- Logging -->
+         <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${org.apache.logging.log4j.version}</version>
         </dependency>
     </dependencies>
 </project>
