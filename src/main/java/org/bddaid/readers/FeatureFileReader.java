@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class FeatureFileReader {
 
-    public static List<File> readFiles(File path) {
+    public List<File> readFiles(File path) {
         List<File> features;
         try {
             features = Files.walk(Paths.get(path.toURI()))

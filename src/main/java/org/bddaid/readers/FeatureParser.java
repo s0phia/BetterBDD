@@ -1,4 +1,4 @@
-package org.bddaid.utils;
+package org.bddaid.readers;
 
 import gherkin.AstBuilder;
 import gherkin.Parser;
@@ -14,27 +14,22 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BDDFeatureParser {
+public class FeatureParser {
 
     static List<String> errors = new ArrayList<>();
 
+    public List<Feature> parseFiles(File filepath) {
 
-    private static Feature parse(File featureFile) {
-        return parseFeatureFile(featureFile);
-    }
-
-    public static List<Feature> parseFiles(File filepath) {
-
-        List<File> featureFiles = FeatureFileReader.readFiles(filepath);
+        List<File> featureFiles = new FeatureFileReader().readFiles(filepath);
         List<Feature> parsedFeatures = new ArrayList<>();
 
         for (File featureFile : featureFiles)
-            parsedFeatures.add(parse(featureFile));
+            parsedFeatures.add(parseFeatureFile(featureFile));
 
         return parsedFeatures;
     }
 
-    public static Feature parseFeatureFile(File featureFile) {
+    public Feature parseFeatureFile(File featureFile) {
 
         Feature parsedFeature = null;
         GherkinDocument gherkinDocument;

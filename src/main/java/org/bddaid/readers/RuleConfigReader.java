@@ -20,7 +20,7 @@ public class RuleConfigReader {
     private static String MAX_STEPS_KEY = "max_steps";
 
     //here i used a set as opposed to list as there shuould not be any duplicat entryies is each rule should be uniguw
-    public static Set<IRule> readRules(File file) throws RuntimeException, IOException {
+    public Set<IRule> readRules(File file) throws RuntimeException, IOException {
 
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         List configList = mapper.readValue(file, ArrayList.class);

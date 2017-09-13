@@ -74,7 +74,7 @@ public class BDDRunResult {
         List<FeatureRunResult> passedFeatures = new ArrayList<>();
 
         for (FeatureRunResult f : featureRunResults) {
-            if (f.isSuccess())
+            if (f != null && f.isSuccess())
                 passedFeatures.add(f);
         }
         return passedFeatures;
@@ -98,11 +98,12 @@ public class BDDRunResult {
 
         for (Feature feature : features) {
             for (FeatureRunResult f : featureRunResults) {
-                if (feature.getPath().equals(f.getFeature().getPath()) && !f.isSuccess()) {
-                    failedFeatures.add(feature);
-                    break;
+                if (f != null) {
+                    if (feature.getPath().equals(f.getFeature().getPath()) && !f.isSuccess()) {
+                        failedFeatures.add(feature);
+                        break;
+                    }
                 }
-
             }
         }
         return failedFeatures;
@@ -113,7 +114,7 @@ public class BDDRunResult {
         List<FeatureRunResult> failedFeatures = new ArrayList<>();
 
         for (FeatureRunResult f : featureRunResults) {
-            if (!f.isSuccess())
+            if (f != null && !f.isSuccess())
                 failedFeatures.add(f);
         }
         return failedFeatures;
@@ -130,5 +131,13 @@ public class BDDRunResult {
         return failedGlobalFeatures;
     }
 
+    public List<FeatureRunResult> getFeatureRunResults() {
+        return featureRunResults;
+    }
 
-}
+
+    public List<FeaturesRunResult> getFeatureGlobalRunResults() {
+        return featureGlobalRunResults;
+    }
+
+   }

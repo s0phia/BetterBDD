@@ -66,4 +66,8 @@ public class FeatureRunResult implements RunResult {
         return failedScenarios;
     }
 
+    public boolean getSuccess() {
+        return success;
+    }
+
 }

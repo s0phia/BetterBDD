@@ -9,7 +9,7 @@ import org.bddaid.readers.RuleConfigReader;
 import org.bddaid.reports.Reporter;
 import org.bddaid.rules.IRule;
 import org.bddaid.runner.BDDRuleRunner;
-import org.bddaid.utils.BDDFeatureParser;
+import org.bddaid.readers.FeatureParser;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,11 +30,15 @@ public class Main {
 
         parseArguments(args);
 
-        List<Feature> parsedFeatures = BDDFeatureParser.parseFiles(new File(appArgs.getPath()));
-        Set<IRule> bddRules = RuleConfigReader.readRules(new File(appArgs.getRulesPath()));
+        FeatureParser featureParser = new FeatureParser();
+        List<Feature> parsedFeatures = featureParser.parseFiles(new File(appArgs.getPath()));
+        
+        RuleConfigReader ruleConfigReader = new RuleConfigReader();
+        Set<IRule> bddRules = ruleConfigReader.readRules(new File(appArgs.getRulesPath()));
 
         BDDRunResult runResult = new BDDRuleRunner().runRules(parsedFeatures, bddRules);
         Reporter reporter = new Reporter(ReportFormat.HTML);
+        Reporter reporter = new Reporter(ReportFormat.CONSOLE);
         reporter.printReport(runResult);
     }
 
