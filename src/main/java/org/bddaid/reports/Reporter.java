@@ -19,6 +19,8 @@ public class Reporter {
             case HTML:
                 new HTMLReporter().saveReport(runResult, new File(fileName +".html"));
                 break;
+            case JSON:
+                new JSONReporter().saveReport(runResult, new File(fileName +".json"));
                 break;
         }
     }
