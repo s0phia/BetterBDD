@@ -3,18 +3,19 @@ package org.bddaid;
 import com.beust.jcommander.JCommander;
 import org.bddaid.cli.AppArgs;
 import org.bddaid.model.Feature;
-import org.bddaid.model.enums.ReportFormat;
 import org.bddaid.model.result.BDDRunResult;
+import org.bddaid.readers.FeatureParser;
 import org.bddaid.readers.RuleConfigReader;
 import org.bddaid.reports.Reporter;
 import org.bddaid.rules.IRule;
 import org.bddaid.runner.BDDRuleRunner;
-import org.bddaid.readers.FeatureParser;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
+
+import static org.bddaid.model.enums.ReportFormat.*;
 
 public class Main {
 
@@ -37,9 +38,9 @@ public class Main {
         Set<IRule> bddRules = ruleConfigReader.readRules(new File(appArgs.getRulesPath()));
 
         BDDRunResult runResult = new BDDRuleRunner().runRules(parsedFeatures, bddRules);
-        Reporter reporter = new Reporter(ReportFormat.HTML);
-        Reporter reporter = new Reporter(ReportFormat.CONSOLE);
-        reporter.printReport(runResult);
+        Reporter reporter = new Reporter();
+        reporter.printReport(runResult, HTML);
+        reporter.printReport(runResult, CONSOLE);
     }
 
 

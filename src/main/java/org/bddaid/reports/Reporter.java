@@ -4,22 +4,21 @@ package org.bddaid.reports;
 import org.bddaid.model.enums.ReportFormat;
 import org.bddaid.model.result.BDDRunResult;
 
+import java.io.File;
+import java.io.IOException;
+
 public class Reporter {
 
-    private ReportFormat format;
+    public void printReport(BDDRunResult runResult, ReportFormat format) throws IOException {
 
-    public Reporter(ReportFormat format) {
-        this.format = format;
-    }
-
-    public void printReport(BDDRunResult runResult) {
-
+        String fileName = "better_bdd_report";
         switch (format) {
             case CONSOLE:
                 ConsoleReporter.runReport(runResult);
                 break;
             case HTML:
-                HTMLReporter.runReport(runResult);
+                new HTMLReporter().saveReport(runResult, new File(fileName +".html"));
+                break;
                 break;
         }
     }
