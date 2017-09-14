@@ -5,7 +5,6 @@ import gherkin.Parser;
 import gherkin.ParserException;
 import gherkin.ast.GherkinDocument;
 import org.bddaid.model.Feature;
-import org.bddaid.readers.FeatureFileReader;
 
 import java.io.File;
 import java.io.FileNotFoundException;

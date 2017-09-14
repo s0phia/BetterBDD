@@ -40,7 +40,7 @@ public class FeaturesRunResult implements RunResult {
         List<FeatureRunResult> failedFeatureRunResults = new ArrayList<>();
 
             for (FeatureRunResult fr : featureRunResults) {
-                if (!fr.isSuccess())
+                if (!fr.getSuccess())
                     failedFeatureRunResults.add(fr);
             }
 

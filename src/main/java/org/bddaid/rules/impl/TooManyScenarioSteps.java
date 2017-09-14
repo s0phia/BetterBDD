@@ -1,8 +1,7 @@
 package org.bddaid.rules.impl;
 
 import gherkin.ast.GherkinDocument;
-import gherkin.pickles.Compiler;
-import gherkin.pickles.Pickle;
+import gherkin.ast.ScenarioDefinition;
 import org.bddaid.model.Feature;
 import org.bddaid.model.enums.Rule;
 import org.bddaid.model.enums.RuleCategory;
@@ -32,28 +31,37 @@ public class TooManyScenarioSteps extends IRuleSingle {
     @Override
     public RunResult applyRule(Feature feature) {
 
-        boolean success = true;
-
-        List<ScenarioRunResult> scenarioRunResultList = new ArrayList<>();
+      List<ScenarioRunResult> scenarioRunResultList = new ArrayList<>();
 
         GherkinDocument gherkinDocument = feature.getGherkinDocument();
-        List<Pickle> pickles = new Compiler().compile(gherkinDocument);
 
-        if (pickles.size() > 0) {
+        if (gherkinDocument.getFeature() != null
+                && !gherkinDocument.getFeature().getChildren().isEmpty()) {
 
-            for (Pickle pickle : pickles) {
-                if (pickle.getSteps().size() > maxSteps) {
-                    scenarioRunResultList.add(new ScenarioRunResult(false, this, pickle.getName()));
-                    success = false;
+            for (ScenarioDefinition scenario : gherkinDocument.getFeature().getChildren()) {
+
+                boolean isScenarioPassed;
+
+                if (scenario.getSteps().size() > maxSteps) {
+                    isScenarioPassed = false;
                 } else {
-                    scenarioRunResultList.add(new ScenarioRunResult(true, this, pickle.getName()));
-
+                    isScenarioPassed = true;
                 }
+
+                scenarioRunResultList.add(new ScenarioRunResult(isScenarioPassed, this, scenario.getName()));
             }
 
         }
 
-        return new FeatureRunResult(success, this, feature, scenarioRunResultList);
+        boolean isFeaturePassed = true;
+
+        for (ScenarioRunResult scenarioResult : scenarioRunResultList) {
+            if (!scenarioResult.isSuccess())
+                isFeaturePassed = false;
+            break;
+        }
+
+        return new FeatureRunResult(isFeaturePassed, this, feature, scenarioRunResultList);
     }
 
     public int getMaxSteps() {

@@ -26,16 +26,18 @@ public class BadFeatureName extends IRuleSingle {
 
     @Override
     public RunResult applyRule(Feature feature) {
-        boolean isSuccess = false;
+
+        boolean isPassed = false;
         GherkinDocument gherkinDocument = feature.getGherkinDocument();
+
         if (gherkinDocument.getFeature() != null) {
             if (gherkinDocument.getFeature().getName().split(" ").length < minWords) {
-                isSuccess = false;
+                isPassed = false;
             } else {
-                isSuccess = true;
+                isPassed = true;
             }
         }
-        return new FeatureRunResult(isSuccess, this, feature);
+        return new FeatureRunResult(isPassed, this, feature);
     }
 
     public int getMinWords() {

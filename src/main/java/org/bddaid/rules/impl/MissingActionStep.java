@@ -3,7 +3,6 @@ package org.bddaid.rules.impl;
 import gherkin.ast.GherkinDocument;
 import gherkin.ast.ScenarioDefinition;
 import gherkin.ast.Step;
-import javafx.beans.binding.When;
 import org.bddaid.model.Feature;
 import org.bddaid.model.enums.Rule;
 import org.bddaid.model.enums.RuleCategory;

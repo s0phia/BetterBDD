@@ -53,7 +53,7 @@ public class BDDRuleRunner {
         }
 
         for (FeatureRunResult a:bddRunResult.getFailedFeatureResults()){
-            if(!a.isSuccess())
+            if(!a.getSuccess())
                 failedRules.add(a.getRule());
 
         }

@@ -30,28 +30,34 @@ public class MissingScenarioSteps extends IRuleSingle {
     @Override
     public RunResult applyRule(Feature feature) {
 
-        boolean success = true;
-
-        List<ScenarioRunResult> scenarioRunResultList = new ArrayList<>();
+     List<ScenarioRunResult> scenarioRunResultList = new ArrayList<>();
 
         GherkinDocument gherkinDocument = feature.getGherkinDocument();
         if (gherkinDocument.getFeature() != null) {
             for (ScenarioDefinition scenario : gherkinDocument.getFeature().getChildren()) {
+                boolean isScenarioPassed;
 
                 if (scenario.getSteps().size() < 1) {
-
-                    scenarioRunResultList.add(new ScenarioRunResult(false, this, scenario.getName()));
-                    success = false;
-
+                    isScenarioPassed = false;
                 } else {
-                    scenarioRunResultList.add(new ScenarioRunResult(true, this, scenario.getName()));
+                    isScenarioPassed = true;
 
                 }
+
+                scenarioRunResultList.add(new ScenarioRunResult(isScenarioPassed, this, scenario.getName()));
+
             }
         }
 
-        return new FeatureRunResult(success, this, feature, scenarioRunResultList);
+        boolean isFeaturePassed = true;
 
+        for (ScenarioRunResult scenarioResult : scenarioRunResultList) {
+            if (!scenarioResult.isSuccess())
+                isFeaturePassed = false;
+            break;
+        }
+
+        return new FeatureRunResult(isFeaturePassed, this, feature, scenarioRunResultList);
 
     }
 

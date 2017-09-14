@@ -29,8 +29,10 @@ public class DuplicateFeatureName extends IRuleBatch {
 
     @Override
     public RunResult applyRule(List<Feature> features) {
+
         List<Feature> featuresWithDuplicates = new ArrayList<>();
         List<FeatureRunResult> featureRunResultList = new ArrayList<>();
+
         boolean success = false;
 
         Map<String, Integer> frequency = new HashMap<>();

@@ -1,6 +1,8 @@
 package org.bddaid.rules.impl;
 
 import gherkin.ast.GherkinDocument;
+import gherkin.ast.Scenario;
+import gherkin.ast.ScenarioDefinition;
 import gherkin.pickles.Compiler;
 import gherkin.pickles.Pickle;
 import org.bddaid.model.Feature;
@@ -41,16 +43,16 @@ public class DuplicateScenarioName extends IRuleBatch {
         for (Feature feature : features) {
 
             GherkinDocument gherkinDocument = feature.getGherkinDocument();
-            List<Pickle> pickles = new Compiler().compile(gherkinDocument);
 
-            Map<String, Integer> frequency = new HashMap<>();
+            if (gherkinDocument.getFeature() != null) {
 
-            if (pickles.size() > 0) {
-                for (Pickle pickle : pickles) {
-                    if (frequency.containsKey(pickle.getName())) {
-                        frequency.put(pickle.getName(), frequency.get(pickle.getName()) + 1);
+                Map<String, Integer> frequency = new HashMap<>();
+
+                for (ScenarioDefinition scenario : gherkinDocument.getFeature().getChildren()) {
+                    if (frequency.containsKey(scenario.getName())) {
+                        frequency.put(scenario.getName(), frequency.get(scenario.getName()) + 1);
                     } else {
-                        frequency.put(pickle.getName(), 1);
+                        frequency.put(scenario.getName(), 1);
                     }
                 }
 

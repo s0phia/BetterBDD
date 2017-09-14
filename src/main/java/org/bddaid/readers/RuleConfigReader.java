@@ -80,6 +80,7 @@ public class RuleConfigReader {
                                     .get(MIN_WORDS_KEY).toString()));
                         rules.add(badScenarioNameRule);
                         break;
+
                     case too_many_scenario_steps:
                         TooManyScenarioSteps bddRule = new TooManyScenarioSteps();
                         if (ruleConfigMap.containsKey(MAX_STEPS_KEY))

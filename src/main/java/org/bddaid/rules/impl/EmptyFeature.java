@@ -25,14 +25,15 @@ public class EmptyFeature extends IRuleSingle {
     public FeatureRunResult applyRule(Feature feature) {
 
         boolean success;
+
         GherkinDocument gherkinDocument = feature.getGherkinDocument();
 
-        if (gherkinDocument.getFeature() == null)
+        if (gherkinDocument.getFeature() == null ||
+                (gherkinDocument.getFeature().getChildren().size() < 1)) {
             success = false;
-        else if (gherkinDocument.getFeature().getChildren().size() < 1)
-            success = false;
-        else
+        }else {
             success = true;
+        }
 
         return new FeatureRunResult(success, this, feature);
     }
