@@ -17,11 +17,11 @@ public class BadFeatureName extends IRuleSingle {
     private static final String DESCRIPTION = bad_feature_name.description();
     private static final String ERROR_MESSAGE = "Bad feature names found";
     private static final RuleCategory CATEGORY = COHERENCE;
-    private int minWords = 13;
+    private int minWords = 2;
 
     public BadFeatureName() {
         super(RULE_NAME, DESCRIPTION, ERROR_MESSAGE, CATEGORY);
-        setMinWords(3);
+        setMinWords(minWords);
     }
 
     @Override
@@ -31,13 +31,17 @@ public class BadFeatureName extends IRuleSingle {
         GherkinDocument gherkinDocument = feature.getGherkinDocument();
 
         if (gherkinDocument.getFeature() != null) {
-            if (gherkinDocument.getFeature().getName().split(" ").length < minWords) {
-                isPassed = false;
-            } else {
+
+            if (gherkinDocument.getFeature().getName().split(" ").length > minWords) {
                 isPassed = true;
+            } else {
+                isPassed = false;
             }
+
+            return new FeatureRunResult(isPassed, this, feature);
+        } else {
+            return null;
         }
-        return new FeatureRunResult(isPassed, this, feature);
     }
 
     public int getMinWords() {

@@ -1,10 +1,7 @@
 package org.bddaid.rules.impl;
 
 import gherkin.ast.GherkinDocument;
-import gherkin.ast.Scenario;
 import gherkin.ast.ScenarioDefinition;
-import gherkin.pickles.Compiler;
-import gherkin.pickles.Pickle;
 import org.bddaid.model.Feature;
 import org.bddaid.model.enums.Rule;
 import org.bddaid.model.enums.RuleCategory;

@@ -6,8 +6,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-
 public class RuleConfigReaderTest {
 
     private ClassLoader classLoader;

@@ -19,14 +19,13 @@ import static org.bddaid.model.enums.RuleCategory.NON_DECLARATIVE;
 
 public class MissingVerificationStep extends IRuleSingle {
 
-    private static final Rule RULE_NAME = missing_verification_step;
+    private static final Rule RULE = missing_verification_step;
     private static final String DESCRIPTION = missing_verification_step.description();
     private static final String ERROR_MESSAGE = "Scenarios with no 'Then' verification step found";
     private static final RuleCategory CATEGORY = NON_DECLARATIVE;
 
-
     public MissingVerificationStep() {
-        super(RULE_NAME, DESCRIPTION, ERROR_MESSAGE, CATEGORY);
+        super(RULE, DESCRIPTION, ERROR_MESSAGE, CATEGORY);
     }
 
     @Override
