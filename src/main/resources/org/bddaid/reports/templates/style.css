@@ -1,8 +1,10 @@
 /* Style the tab */
 div.tab {
     overflow: hidden;
-    border: 1px solid #ccc;
-    background-color: #f1f1f1;
+    border: 1px solid #2a6fa0;
+    background-color: #c5e0f3;
+    margin-left: 15px;
+    margin-right: 15px;
 }
 
 /* Style the buttons inside the tab */
@@ -12,7 +14,7 @@ div.tab button {
     border: none;
     outline: none;
     cursor: pointer;
-    padding: 14px 16px;
+    padding: 2px 20px;
     transition: 0.3s;
 }
 
@@ -23,13 +25,157 @@ div.tab button:hover {
 
 /* Create an active/current tablink class */
 div.tab button.active {
-    background-color: #ccc;
+    background-color: #5998b7;
 }
 
 /* Style the tab content */
 .tabcontent {
     display: none;
-    padding: 6px 12px;
-    border: 1px solid #ccc;
+    padding: 12px 12px;
     border-top: none;
+    border: 1px solid gray;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+
+.container {
+    /*border: 1px solid #2a6fa0;*/
+     width: 90%;
+    /*height: 100%;*/
+    /*margin: auto;*/
+    padding: 0px;
+}
+.one {
+    width: 50%;
+    /*height: 200px;*/
+    /*background: red;*/
+    float: left;
+
+    /*border: 1px solid ;*/
+}
+.two {
+    margin-top: 3%;
+    width: 50%;
+    float: right;
+    /*border: 1px solid ;*/
+    /*height: 200px;*/
+ }
+
+table.rules {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 70%;
+}
+
+table.rules td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+table.rules tr:nth-child(1) {
+    background-color: #dddddd;
+}
+
+p {
+    font-family:euphemia, verdana, sans-serif;
+}
+
+/*li {*/
+    /*font-family:euphemia, verdana, sans-serif;*/
+/*}*/
+
+/*i {*/
+    /*font-family:euphemia, verdana, sans-serif;*/
+/*}*/
+
+/*ul {*/
+    /*font-family:euphemia, verdana, sans-serif;*/
+/*}*/
+.test-count-summary {
+    font-family:euphemia, verdana, sans-serif;
+    font-size: 16px;
+    padding-bottom: 10px;
+    color:#0d78ae;
+    /*background-color: #f1f3e8;*/
+}
+
+
+table.dataTable thead th.test-results-heading,
+table.dataTable tfoot th.test-results-heading {
+    font-weight: normal;
+}
+
+table.dataTable thead th,
+table.dataTable thead td,
+table.dataTable tfoot th,
+table.dataTable tfoot td {
+    padding: 0 0 0 4px;
+}
+table.dataTable thead th div.DataTables_sort_wrapper span {
+    right: 0;
+}
+
+table.dataTable tbody td {
+    padding: 0;
+}
+
+
+.dataTables_wrapper .dataTables_paginate .fg-button {
+    color: #eaf5f7 !important;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.dataTables_wrapper .dataTables_info {
+    padding-top: 2px;
+}
+
+.test-summary-table {
+    width: 100%;
+    margin-bottom: 20px;
+    background-color: white;
+
+}
+
+.summary-leading-column {
+    background-color: #f0f0f0;
+    font-style: italic;
+}
+
+
+
+.summary-table {
+    width: 100%;
+    border: solid #d3d3d3 1px;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+    padding: 4px;
+
+}
+
+.summary-table td,th {
+    /*border: solid #d3d3d3 1px;*/
+    font-family:euphemia, verdana, sans-serif; font-size:14px; color: black; font-weight:normal; font-size-adjust:inherit;
+}
+
+.summary-table th {
+    font-family:euphemia, verdana, sans-serif; font-size:14px; color: #0d78ae; font-weight:normal; font-size-adjust:inherit;
+    background-color: #f0f0f0;
+}
+
+h4 {
+    font-family:euphemia, verdana, sans-serif;
+    font-style: italic;
+    font-size: 14px;
+    color:#0d78ae;
+    margin-bottom: 10px;
+}
+
+h3 {
+    font-family:euphemia, verdana, sans-serif;
+    font-size: 16px;
+    color:#0d78ae;
+    margin-bottom: 10px;
 }
