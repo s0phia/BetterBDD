@@ -1,16 +1,8 @@
-Feature: Too Many Steps rule
+# Rule: bad_feature_name
 
-  Scenario: This scenario has too many steps
+Feature: 123
+
+  Scenario: This scenario belongs to a feature with a bad name
     Given an initial context
     When an event
-    And another event
-    And another event
-    And another event
-    And another event
-    And another event
-    And another event
-    And another event
     Then an expected outcome
-    And another expected outcome
-    And another expected outcome
-    And another expected outcome
