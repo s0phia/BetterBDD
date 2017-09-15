@@ -45,11 +45,13 @@ public class HTMLReporter implements ReportFormatter {
         input.put("rules", runResult.getRules());
         input.put("allRules", Rule.getRuleNames());
         input.put("ruleCategoryMap", getRuleCategoryMap(runResult));
+        input.put("ruleCategoryPassedMap", getRuleCategoryPassMap(runResult));
+        input.put("ruleCategoryfailedMap", getRuleCategoryFailedMap(runResult));
 
         Template template;
         try {
-            template = cfg.getTemplate("report.ftl");
 
+            template = cfg.getTemplate("report.ftl");
             Writer consoleWriter = new OutputStreamWriter(System.out);
             template.process(input, consoleWriter);
         } catch (Exception e) {
@@ -74,10 +76,13 @@ public class HTMLReporter implements ReportFormatter {
     private Map<String, Integer> getRuleCategoryMap(BDDRunResult runResult) {
 
         Map<String, Integer> ruleCategoryMap = new HashMap();
+        Map<Integer, Integer> resultMap = new HashMap();
+        resultMap.put(0, 0);
         ruleCategoryMap.put(COHERENCE.name(), 0);
         ruleCategoryMap.put(REDUNDANCY.name(), 0);
         ruleCategoryMap.put(DUPLICATION.name(), 0);
         ruleCategoryMap.put(NON_DECLARATIVE.name(), 0);
+
 
         for (IRule rule : runResult.getRules()) {
             switch (rule.getCategory()) {
@@ -99,6 +104,53 @@ public class HTMLReporter implements ReportFormatter {
         }
         return ruleCategoryMap;
     }
+
+    private Map<String, Integer> getRuleCategoryPassMap(BDDRunResult runResult) {
+
+        Map<String, Integer> ruleCategoryMap = new HashMap();
+        for (RuleCategory ruleCategory : RuleCategory.values()) {
+            ruleCategoryMap.put(ruleCategory.name(), 0);
+        }
+
+        List<String> passed = new ArrayList<>();
+        for (IRule rule : runResult.getPassedRules()) {
+            passed.add(rule.getCategory().name());
+        }
+
+        for (RuleCategory ruleCategory : RuleCategory.values()) {
+            for (IRule rule : runResult.getPassedRules()) {
+                if (rule.getCategory().equals(ruleCategory)) {
+                    ruleCategoryMap.put(ruleCategory.name(), ruleCategoryMap.get(ruleCategory.name()) + 1);
+                }
+            }
+        }
+
+        return ruleCategoryMap;
+    }
+
+    private Map<String, Integer> getRuleCategoryFailedMap(BDDRunResult runResult) {
+
+        Map<String, Integer> ruleCategoryMap = new HashMap();
+        for (RuleCategory ruleCategory : RuleCategory.values()) {
+            ruleCategoryMap.put(ruleCategory.name(), 0);
+        }
+
+        List<String> passed = new ArrayList<>();
+        for (IRule rule : runResult.getFailedRules()) {
+            passed.add(rule.getCategory().name());
+        }
+
+        for (RuleCategory ruleCategory : RuleCategory.values()) {
+            for (IRule rule : runResult.getFailedRules()) {
+                if (rule.getCategory().equals(ruleCategory)) {
+                    ruleCategoryMap.put(ruleCategory.name(), ruleCategoryMap.get(ruleCategory.name()) + 1);
+                }
+            }
+        }
+
+        return ruleCategoryMap;
+    }
+
 
     private static Configuration getConfiguration() {
         Configuration cfg = new Configuration();

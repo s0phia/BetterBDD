@@ -1,5 +1,7 @@
 package org.bddaid.reports;
 
+import gherkin.ast.Feature;
+import gherkin.ast.ScenarioDefinition;
 import org.bddaid.model.enums.RunLevel;
 import org.bddaid.model.result.BDDRunResult;
 import org.bddaid.model.result.impl.FeatureRunResult;
@@ -8,6 +10,8 @@ import org.bddaid.model.result.impl.ScenarioRunResult;
 import org.bddaid.rules.IRule;
 import org.bddaid.rules.IRuleBatch;
 import org.bddaid.rules.IRuleSingle;
+
+import java.util.List;
 
 public class ConsoleReporter {
 
@@ -34,15 +38,18 @@ public class ConsoleReporter {
             System.out.printf("\nFailed rules:\n");
 
             for (IRule rule : runResult.getFailedRules()) {
-                System.out.println("\n\t" + rule.getRule().name() + " - " + rule.getErrorMessage());
+                System.out.printf("\n## %s ## - %s:\n", rule.getRule().name(), rule.getErrorMessage());
 
 
                 if (rule instanceof IRuleSingle) {
                     for (FeatureRunResult r : runResult.getFailedFeatureResults()) {
                         if (r.getRule().getRule().equals(rule.getRule())) {
                             System.out.println("\t\t" + r.getFeature().getPath());
+                            Feature feature = r.getFeature().getGherkinDocument().getFeature();
+                            if (r.getRule().getRule().runLevel().equals(RunLevel.FEATURE) && feature != null) {
+                                System.out.printf("\t\t\t[%s]\n", feature.getName());
 
-                            if (r.getRule().getRule().runLevel().equals(RunLevel.SCENARIO)) {
+                            } else if (r.getRule().getRule().runLevel().equals(RunLevel.SCENARIO)) {
                                 for (ScenarioRunResult sr : r.getFailedScenarios()) {
                                     System.out.printf("\t\t\t[%s]\n", sr.getScenario());
                                 }
@@ -56,6 +63,16 @@ public class ConsoleReporter {
                     for (FeaturesRunResult fr : runResult.getFailedFeatureGlobalResults()) {
                         for (FeatureRunResult ffr : fr.getFailedFeatureRunResults()) {
                             System.out.printf("\t\t %s \n", ffr.getFeature().getPath());
+                            if (ffr.getRule().getRule().runLevel().equals(RunLevel.FEATURE_GROUP)) {
+                                System.out.printf("\t\t\t[%s]\n", ffr.getFeature().getGherkinDocument().getFeature().getName());
+
+                            } else if (ffr.getRule().getRule().runLevel().equals(RunLevel.SCENARIO_GROUP)) {
+                                List<ScenarioDefinition> scenarios = ffr.getFeature().getGherkinDocument().getFeature().getChildren();
+                                for (ScenarioDefinition scenario : scenarios) {
+                                    System.out.printf("\t\t\n[%s]\n", scenario.getName());
+                                }
+
+                            }
                         }
                     }
 
@@ -68,9 +85,9 @@ public class ConsoleReporter {
             System.out.printf("\nNo Rules Passed\n");
 
         } else {
-            System.out.printf("\nPassed rules:\n");
+            System.out.printf("\nPassed rules:\n\n");
             for (IRule rule : runResult.getPassedRules()) {
-                System.out.println("\t" + rule.getRule().name());
+                System.out.printf("## %s ##\n", rule.getRule().name());
             }
         }
 

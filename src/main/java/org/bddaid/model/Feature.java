@@ -19,4 +19,9 @@ public class Feature {
     public GherkinDocument getGherkinDocument() {
         return gherkinDocument;
     }
+    public String getFileName() {
+        return path.substring(path.lastIndexOf("/")+1);
+    }
+
+
 }
