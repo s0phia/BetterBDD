@@ -17,7 +17,7 @@ public abstract class IRuleBatch extends IRule {
     abstract public RunResult applyRule(List<Feature> featureFiles);
 
     public RunLevel getRunLevel() {
-        return RunLevel.GLOBAL;
+        return RunLevel.FEATURE_GROUP;
     }
 
 }

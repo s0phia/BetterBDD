@@ -1,5 +1,5 @@
 package org.bddaid.model.enums;
 
 public enum RunLevel {
-    GLOBAL, FEATURE, SCENARIO
+    FEATURE_GROUP, SCENARIO_GROUP, FEATURE, SCENARIO
 }

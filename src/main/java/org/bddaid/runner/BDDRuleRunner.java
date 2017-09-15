@@ -24,7 +24,7 @@ public class BDDRuleRunner {
 
         for (IRule rule : rules) {
 
-            if (rule.getRule().runLevel().equals(RunLevel.GLOBAL)) {
+            if (rule.getRule().runLevel().equals(RunLevel.FEATURE_GROUP)) {
 
                 IRuleBatch ruleBatch = ((IRuleBatch) rule);
                 featuresRunResult = (FeaturesRunResult) ruleBatch.applyRule(features);
