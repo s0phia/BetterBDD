@@ -100,6 +100,10 @@ public class RuleConfigReader {
                         rules.add(new MissingScenarioSteps());
                         break;
 
+                     case named_third_person_narrative:
+                         rules.add(new NamedThirdPersonNarrative());
+                         break;
+
                 }
             }
         }
