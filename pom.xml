@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.bddaid</groupId>
-    <artifactId>bddaid</artifactId>
+    <groupId>org.betterbdd</groupId>
+    <artifactId>betterbdd</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -34,7 +34,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.bddaid.Main</mainClass>
+                            <mainClass>org.betterbdd.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
