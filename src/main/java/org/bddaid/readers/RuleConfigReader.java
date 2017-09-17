@@ -57,15 +57,6 @@ public class RuleConfigReader {
                         rules.add(new EmptyFeature());
                         break;
 
-                    case duplicate_scenario_name:
-                        rules.add(new DuplicateScenarioName());
-                        break;
-
-                    case duplicate_feature_name:
-
-                        rules.add(new DuplicateFeatureName());
-                        break;
-
                     case bad_feature_name:
                         BadFeatureName badFeatureNameRule = new BadFeatureName();
                         if (ruleConfigMap.containsKey(MIN_WORDS_KEY))
@@ -81,6 +72,39 @@ public class RuleConfigReader {
                         rules.add(badScenarioNameRule);
                         break;
 
+                    case bad_step_sequence:
+                        rules.add(new BadStepSequence());
+                        break;
+
+                    case duplicate_scenario_name:
+                        rules.add(new DuplicateScenarioName());
+                        break;
+
+                    case duplicate_feature_name:
+                        rules.add(new DuplicateFeatureName());
+                        break;
+
+                    case missing_action_step:
+                        rules.add(new MissingActionStep());
+                        break;
+
+                    case missing_scenario_steps:
+                        rules.add(new MissingScenarioSteps());
+                        break;
+
+
+                    case missing_verification_step:
+                        rules.add(new MissingVerificationStep());
+                        break;
+
+                    case named_third_person_narrative:
+                        rules.add(new NamedThirdPersonNarrative());
+                        break;
+
+                    case technical_language:
+                        rules.add(new TechnicalLanguage());
+                        break;
+
                     case too_many_scenario_steps:
                         TooManyScenarioSteps bddRule = new TooManyScenarioSteps();
                         if (ruleConfigMap.containsKey(MAX_STEPS_KEY))
@@ -88,21 +112,6 @@ public class RuleConfigReader {
                         rules.add(bddRule);
                         break;
 
-                    case missing_action_step:
-                        rules.add(new MissingActionStep());
-                        break;
-
-                    case missing_verification_step:
-                        rules.add(new MissingVerificationStep());
-                        break;
-
-                    case missing_scenario_steps:
-                        rules.add(new MissingScenarioSteps());
-                        break;
-
-                     case named_third_person_narrative:
-                         rules.add(new NamedThirdPersonNarrative());
-                         break;
 
                 }
             }

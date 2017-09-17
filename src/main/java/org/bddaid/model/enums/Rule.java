@@ -14,7 +14,8 @@ public enum Rule {
     missing_action_step("Prevents a scenario definition missing a 'When' action step", RunLevel.SCENARIO),
     missing_scenario_steps("Prevents a scenario definition without any steps", RunLevel.SCENARIO),
     missing_verification_step("Prevents a scenario definition missing a 'Then' verification step", RunLevel.SCENARIO),
-    named_third_person_narrative("Verifies that scenarios are written using a named third-person narrative", RunLevel.SCENARIO);
+    named_third_person_narrative("Prevents scenarios not written using a named third-person narrative", RunLevel.SCENARIO),
+    bad_step_sequence("Prevents a scenario definition having an invalid sequence of scenario steps", RunLevel.SCENARIO);
 
     private final String description;
     private final RunLevel runLevel;

@@ -18,22 +18,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.bddaid.model.enums.Rule.named_third_person_narrative;
+import static org.bddaid.model.enums.Keyword.*;
+import static org.bddaid.model.enums.Rule.bad_step_sequence;
+import static org.bddaid.model.enums.RuleCategory.COHERENCE;
 import static org.bddaid.model.enums.RuleCategory.NON_DECLARATIVE;
 
-public class NamedThirdPersonNarrative extends IRuleSingle {
+public class BadStepSequence extends IRuleSingle {
 
-    private static final Rule RULE_NAME = named_third_person_narrative;
-    private static final String DESCRIPTION = named_third_person_narrative.description();
-    private static final String ERROR_MESSAGE = "Scenarios do not use named third-person narrative";
-    private static final RuleCategory CATEGORY = NON_DECLARATIVE;
-    private List<String> namedSubjects;
-    private List<String> pronouns;
+    private static final Rule RULE_NAME = bad_step_sequence;
+    private static final String DESCRIPTION = bad_step_sequence.description();
+    private static final String ERROR_MESSAGE = "Scenarios have incorrect sequence of steps";
+    private static final RuleCategory CATEGORY = COHERENCE;
 
-    public NamedThirdPersonNarrative() {
+
+    public BadStepSequence() {
         super(RULE_NAME, DESCRIPTION, ERROR_MESSAGE, CATEGORY);
-        namedSubjects = Arrays.asList("Mary","Simon");
-        pronouns = Arrays.asList("he", "she", "his", "her");
     }
 
     @Override
@@ -51,17 +50,18 @@ public class NamedThirdPersonNarrative extends IRuleSingle {
                 if (!scenario.getSteps().isEmpty()) {
                     boolean isScenarioPassed;
 
-                    if (!isThirdPersonNarrative(scenario) ){
+
+                    if (!isValidStepSequence(scenario)) {
                         isScenarioPassed = false;
                     } else {
                         isScenarioPassed = true;
                     }
 
                     scenarioRunResultList.add(new ScenarioRunResult(isScenarioPassed, this, scenario.getName()));
-                }else {
+                } else {
                     LogManager.getLogger().log(Level.WARN,
                             String.format("Rule %s not executed on scenario [%s] as no steps found!",
-                                    this.getName(), scenario.getName() ));
+                                    this.getName(), scenario.getName()));
 
                 }
             }
@@ -81,45 +81,53 @@ public class NamedThirdPersonNarrative extends IRuleSingle {
 
     }
 
-    public boolean isThirdPersonNarrative(ScenarioDefinition scenario) {
+    public boolean isValidStepSequence(ScenarioDefinition scenario) {
         List<Step> steps = scenario.getSteps();
 
-        for (Step step : steps) {
-            String[] stepWords = step.getText().split(" ");
-            String firstWord = stepWords[0];
-            String secondWord = stepWords[1];
+        Keyword firstKeyword = Keyword.valueOf(steps.get(0).getKeyword().trim().toUpperCase());
 
-            Keyword keyword = Keyword.valueOf(step.getKeyword().toUpperCase().trim());
-            switch (keyword) {
+        if (!firstKeyword.equals(GIVEN))
+            return false;
 
-                case GIVEN:
-                    if (!namedSubjects.contains(firstWord)
-                            && !(firstWord.equals("that") && namedSubjects.contains(secondWord)))
-                        return false;
-                    break;
-                case WHEN:
-                    if (!(pronouns.contains(firstWord) && secondWord.endsWith("s")))
-                        return false;
-                case THEN:
-                    if (!pronouns.contains(firstWord))
-                        return false;
-                    break;
+        Keyword currentKeyword;
+        Keyword nextKeyword;
+        for (int i = 1; i < steps.size(); i++) {
 
+
+            currentKeyword = Keyword.valueOf(steps.get(i).getKeyword().toUpperCase().trim());
+            if (!(steps.size() - 1 == i)) {
+                nextKeyword = Keyword.valueOf(steps.get(i + 1).getKeyword().toUpperCase().trim());
+
+                switch (currentKeyword) {
+
+                    case GIVEN:
+                        return false;
+
+                    case WHEN:
+                        if (!Arrays.asList(THEN, BUT, AND).contains(nextKeyword))
+                            return false;
+                        break;
+
+                    case THEN:
+                        if (!nextKeyword.equals(AND))
+                            return false;
+                        break;
+
+                    case AND:
+                        if (!Arrays.asList(WHEN, THEN, BUT, AND).contains(nextKeyword))
+                            return false;
+                        break;
+
+                    case BUT:
+                        if (!Arrays.asList(WHEN, THEN, AND).contains(nextKeyword))
+                            return false;
+                        break;
+                }
             }
-
         }
 
         return true;
     }
-
-    public List<String> getNamedSubjects() {
-        return namedSubjects;
-    }
-
-    public void setNamedSubjects(List<String> namedSubjects) {
-        this.namedSubjects = namedSubjects;
-    }
-
 
 }
 

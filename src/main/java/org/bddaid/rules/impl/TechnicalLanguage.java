@@ -6,7 +6,6 @@ import gherkin.ast.Step;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.bddaid.model.Feature;
-import org.bddaid.model.enums.Keyword;
 import org.bddaid.model.enums.Rule;
 import org.bddaid.model.enums.RuleCategory;
 import org.bddaid.model.result.RunResult;
@@ -18,23 +17,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.bddaid.model.enums.Rule.named_third_person_narrative;
+import static org.bddaid.model.enums.Rule.technical_language;
 import static org.bddaid.model.enums.RuleCategory.NON_DECLARATIVE;
 
-public class NamedThirdPersonNarrative extends IRuleSingle {
+public class TechnicalLanguage extends IRuleSingle {
 
-    private static final Rule RULE_NAME = named_third_person_narrative;
-    private static final String DESCRIPTION = named_third_person_narrative.description();
+    private static final Rule RULE_NAME = technical_language;
+    private static final String DESCRIPTION = technical_language.description();
     private static final String ERROR_MESSAGE = "Scenarios do not use named third-person narrative";
     private static final RuleCategory CATEGORY = NON_DECLARATIVE;
-    private List<String> namedSubjects;
-    private List<String> pronouns;
+    private List<String> technicalTerms;
+    private List<String> technicalSubtrings;
 
-    public NamedThirdPersonNarrative() {
+    public TechnicalLanguage() {
         super(RULE_NAME, DESCRIPTION, ERROR_MESSAGE, CATEGORY);
-        namedSubjects = Arrays.asList("Mary","Simon");
-        pronouns = Arrays.asList("he", "she", "his", "her");
-    }
+        technicalTerms = Arrays.asList("clicks", "swipes", "types");
+        technicalSubtrings = Arrays.asList("http","//", "POST", "GET", "PUT", "DELETE", "UPDATE");
+
+     }
 
     @Override
     public RunResult applyRule(Feature feature) {
@@ -51,7 +51,7 @@ public class NamedThirdPersonNarrative extends IRuleSingle {
                 if (!scenario.getSteps().isEmpty()) {
                     boolean isScenarioPassed;
 
-                    if (!isThirdPersonNarrative(scenario) ){
+                    if (containsTechnicalLanguage(scenario) ){
                         isScenarioPassed = false;
                     } else {
                         isScenarioPassed = true;
@@ -81,43 +81,25 @@ public class NamedThirdPersonNarrative extends IRuleSingle {
 
     }
 
-    public boolean isThirdPersonNarrative(ScenarioDefinition scenario) {
+    public boolean containsTechnicalLanguage(ScenarioDefinition scenario) {
+
         List<Step> steps = scenario.getSteps();
 
         for (Step step : steps) {
-            String[] stepWords = step.getText().split(" ");
-            String firstWord = stepWords[0];
-            String secondWord = stepWords[1];
 
-            Keyword keyword = Keyword.valueOf(step.getKeyword().toUpperCase().trim());
-            switch (keyword) {
-
-                case GIVEN:
-                    if (!namedSubjects.contains(firstWord)
-                            && !(firstWord.equals("that") && namedSubjects.contains(secondWord)))
-                        return false;
-                    break;
-                case WHEN:
-                    if (!(pronouns.contains(firstWord) && secondWord.endsWith("s")))
-                        return false;
-                case THEN:
-                    if (!pronouns.contains(firstWord))
-                        return false;
-                    break;
-
+            for (String substr: technicalSubtrings) {
+                if (step.getText().toLowerCase().contains(substr.toLowerCase()))
+                    return true;
             }
+            List<String> words = Arrays.asList(step.getText().split(" "));
 
+            for (String word : words) {
+                if (technicalTerms.contains(word.toLowerCase()))
+                    return true;
+            }
         }
 
-        return true;
-    }
-
-    public List<String> getNamedSubjects() {
-        return namedSubjects;
-    }
-
-    public void setNamedSubjects(List<String> namedSubjects) {
-        this.namedSubjects = namedSubjects;
+        return false;
     }
 
 
