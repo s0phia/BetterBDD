@@ -3,16 +3,16 @@
     <link rel="stylesheet" href="org/betterbdd/reports/templates/style.css">
     <link rel="stylesheet" href="org/betterbdd/reports/css/font-awesome/css/font-awesome.min.css">
     <script type="text/javascript" src="org/betterbdd/reports/templates/script.js"></script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="org/betterbdd/reports/gstatic/loader.js"></script>
 
     <script type="text/javascript">
 
         google.charts.load('current', {'packages': ['corechart']});
 
-        google.charts.setOnLoadCallback(drawAnthonyChart);
-        google.charts.setOnLoadCallback(drawSarahChart);
+        google.charts.setOnLoadCallback(drawRulesChart);
+        google.charts.setOnLoadCallback(drawFeaturesChart);
 
-        function drawAnthonyChart() {
+        function drawRulesChart() {
             var data = new google.visualization.DataTable();
             data.addColumn('string', 'Passed/Failed');
             data.addColumn('number', 'count');
@@ -32,7 +32,7 @@
             chart.draw(data, options);
         }
 
-        function drawSarahChart() {
+        function drawFeaturesChart() {
 
             var data = new google.visualization.DataTable();
             data.addColumn('string', 'Passed/Failed');
@@ -57,7 +57,7 @@
 
 </head>
 
-<div id="logo"><a href="index.html"><img src="org/betterbdd/reports/images/logo.jpeg" border="0"></a></div>
+<div id="logo"><img src="org/betterbdd/reports/images/logo.jpeg" border="0"></div>
 <p style="float: right; padding-right: 2%;">Report generated: ${.now}
 <p>
     <body onload="openTab(event, 'Summary')">
