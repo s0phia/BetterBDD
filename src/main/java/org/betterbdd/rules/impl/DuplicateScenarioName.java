@@ -23,13 +23,13 @@ public class DuplicateScenarioName extends IRuleBatch {
 
     private List<Feature> featuresWithDuplicates = new ArrayList<>();
 
-    private static final Rule RULE_NAME = duplicate_scenario_name;
+    private static final Rule RULE = duplicate_scenario_name;
     private static final String DESCRIPTION = duplicate_scenario_name.description();
-    private static final String ERROR_MESSAGE = "Duplicate scenarios names found";
+    private static final String ERROR_MESSAGE = "Duplicate scenario names found";
     private static final RuleCategory CATEGORY = DUPLICATION;
 
     public DuplicateScenarioName() {
-        super(RULE_NAME, DESCRIPTION, ERROR_MESSAGE, CATEGORY);
+        super(RULE, DESCRIPTION, ERROR_MESSAGE, CATEGORY);
     }
 
     @Override

@@ -1,0 +1,2 @@
+- rule: duplicate_scenario_name
+  enabled: true

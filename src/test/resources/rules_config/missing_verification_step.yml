@@ -1,0 +1,2 @@
+- rule: missing_verification_step
+  enabled: true

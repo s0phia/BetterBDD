@@ -69,7 +69,7 @@ public class ConsoleReporter {
                             } else if (ffr.getRule().getRule().runLevel().equals(RunLevel.SCENARIO_GROUP)) {
                                 List<ScenarioDefinition> scenarios = ffr.getFeature().getGherkinDocument().getFeature().getChildren();
                                 for (ScenarioDefinition scenario : scenarios) {
-                                    System.out.printf("\t\t\n[%s]\n", scenario.getName());
+                                    System.out.printf("\t\t\t[%s]\n", scenario.getName());
                                 }
 
                             }

@@ -4,6 +4,7 @@ import gherkin.AstBuilder;
 import gherkin.Parser;
 import gherkin.ParserException;
 import gherkin.ast.GherkinDocument;
+import org.apache.logging.log4j.Level;
 import org.betterbdd.model.Feature;
 
 import java.io.File;
@@ -12,6 +13,7 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.LogManager;
 
 public class FeatureParser {
 
@@ -36,6 +38,9 @@ public class FeatureParser {
 
         try {
             Reader reader = new FileReader(featureFile);
+            org.apache.logging.log4j.LogManager.getLogger().log(Level.DEBUG,
+                    String.format("Parsing feature: %s",featureFile.getAbsolutePath()));
+
             gherkinDocument = parser.parse(reader);
             parsedFeature = new Feature(featureFile.getAbsolutePath(), gherkinDocument);
 

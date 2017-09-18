@@ -1,0 +1,2 @@
+- rule: missing_action_step
+  enabled: true

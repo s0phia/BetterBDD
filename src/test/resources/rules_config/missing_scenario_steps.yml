@@ -1,0 +1,2 @@
+- rule: missing_scenario_steps
+  enabled: true

@@ -1,0 +1,2 @@
+- rule: too_many_steps
+  enabled: true

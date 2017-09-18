@@ -95,7 +95,7 @@
                                 <tbody>
                                 <tr>
                                     <th>Rule Category</th>
-                                    <th>Total</th>
+                                    <th>Rule Count</th>
                                     <th>Pass</th>
                                     <th>Fail</th>
                                 </tr>

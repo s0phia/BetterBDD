@@ -1,0 +1,2 @@
+- rule: duplicate_feature_name
+  enabled: true

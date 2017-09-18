@@ -13,15 +13,16 @@ public class TestBase {
     protected File featureFile;
     protected String baseFeaturePath = "./src/test/resources/test_features";
     protected String baseRulePath = "./src/test/resources/rules_config";
-    protected File systemLog = new File("systemOut.log");
-    protected File errorLog = new File("errorOut.log");
     private String jarLocation = "./target/betterbdd-1.0-SNAPSHOT-jar-with-dependencies.jar";
     private ProcessBuilder pb;
-
+    protected File systemLog;
+    protected File errorLog ;
     protected void runRule(Rule rule, File featureFile) throws IOException {
 
         File rulesConfigFile = new File(String.format("%s/%s.yml", baseRulePath, rule.name()));
 
+        systemLog = new File("systemOut_"+rule.name()+".log");
+        errorLog = new File("errorOut_"+rule.name()+".log");
         String args[] = {"java", "-jar", jarLocation,
                 "--path", featureFile.getPath(),
                 "--rules ", rulesConfigFile.getPath()};

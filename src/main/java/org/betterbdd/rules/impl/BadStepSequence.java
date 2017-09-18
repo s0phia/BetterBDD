@@ -84,7 +84,6 @@ public class BadStepSequence extends IRuleSingle {
         List<Step> steps = scenario.getSteps();
 
         Keyword firstKeyword = Keyword.valueOf(steps.get(0).getKeyword().trim().toUpperCase());
-
         if (!firstKeyword.equals(GIVEN))
             return false;
 
@@ -92,8 +91,8 @@ public class BadStepSequence extends IRuleSingle {
         Keyword nextKeyword;
         for (int i = 1; i < steps.size(); i++) {
 
-
             currentKeyword = Keyword.valueOf(steps.get(i).getKeyword().toUpperCase().trim());
+
             if (!(steps.size() - 1 == i)) {
                 nextKeyword = Keyword.valueOf(steps.get(i + 1).getKeyword().toUpperCase().trim());
 
@@ -103,7 +102,7 @@ public class BadStepSequence extends IRuleSingle {
                         return false;
 
                     case WHEN:
-                        if (!Arrays.asList(THEN, BUT, AND).contains(nextKeyword))
+                        if (!Arrays.asList(AND, BUT, THEN).contains(nextKeyword))
                             return false;
                         break;
 
@@ -113,12 +112,12 @@ public class BadStepSequence extends IRuleSingle {
                         break;
 
                     case AND:
-                        if (!Arrays.asList(WHEN, THEN, BUT, AND).contains(nextKeyword))
+                        if (!Arrays.asList(WHEN, AND, BUT, THEN).contains(nextKeyword))
                             return false;
                         break;
 
                     case BUT:
-                        if (!Arrays.asList(WHEN, THEN, AND).contains(nextKeyword))
+                        if (!Arrays.asList(WHEN, AND, THEN).contains(nextKeyword))
                             return false;
                         break;
                 }
