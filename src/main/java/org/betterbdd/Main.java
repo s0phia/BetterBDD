@@ -35,15 +35,20 @@ public class Main {
 
         FeatureParser featureParser = new FeatureParser();
         List<Feature> parsedFeatures = featureParser.parseFiles(new File(appArgs.getPath()));
-        
+
         RuleConfigReader ruleConfigReader = new RuleConfigReader();
         Set<IRule> bddRules = ruleConfigReader.readRules(new File(appArgs.getRulesPath()));
 
         BDDRunResult runResult = new BDDRuleRunner().runRules(parsedFeatures, bddRules);
         Reporter reporter = new Reporter();
-        reporter.printReport(runResult, HTML);
-        reporter.printReport(runResult, CONSOLE);
-        reporter.printReport(runResult, JSON);
+
+        String path = appArgs.getOutPutPath();
+        if (path.endsWith(".html")) {
+            reporter.printReport(runResult, HTML, path);
+        } else if (path.endsWith(".json")) {
+            reporter.printReport(runResult, JSON, path);
+        }
+        reporter.printReport(runResult, CONSOLE, appArgs.getOutPutPath());
     }
 
 

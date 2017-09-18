@@ -13,8 +13,8 @@ public class JSONReporter implements ReportFormatter {
     public void saveReport(BDDRunResult runResult, File file) throws IOException {
 
         ObjectMapper mapper = new ObjectMapper();
-        LogManager.getLogger().log(Level.DEBUG,
-                String.format("Saving result to file:%s", file.getPath()));
+        LogManager.getLogger().log(Level.INFO,
+                String.format("Saving result to file:%s", file.getAbsolutePath()));
         mapper.writeValue(file, runResult);
 
     }

@@ -22,6 +22,9 @@ public class RuleConfigReader {
     public Set<IRule> readRules(File file) throws RuntimeException, IOException {
 
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+        LogManager.getLogger().log(Level.DEBUG,
+                String.format("Reading rule configuration read from file:%s", file.getPath()));
+
         List configList = mapper.readValue(file, ArrayList.class);
 
         LogManager.getLogger().log(Level.DEBUG,

@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class Reporter {
 
-    public void printReport(BDDRunResult runResult, ReportFormat format) throws IOException {
+    public void printReport(BDDRunResult runResult, ReportFormat format, String filePath) throws IOException {
 
         String fileName = "better_bdd_report";
         switch (format) {
@@ -17,10 +17,10 @@ public class Reporter {
                 ConsoleReporter.runReport(runResult);
                 break;
             case HTML:
-                new HTMLReporter().saveReport(runResult, new File(fileName +".html"));
+                new HTMLReporter().saveReport(runResult, new File(filePath));
                 break;
             case JSON:
-                new JSONReporter().saveReport(runResult, new File(fileName +".json"));
+                new JSONReporter().saveReport(runResult, new File(filePath));
                 break;
         }
     }

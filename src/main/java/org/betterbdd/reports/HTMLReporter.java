@@ -58,8 +58,8 @@ public class HTMLReporter implements ReportFormatter {
             throw new RuntimeException(e);
         }
         try {
-            LogManager.getLogger().log(Level.DEBUG,
-                    String.format("Saving result to file:%s", file.getPath()));
+            LogManager.getLogger().log(Level.INFO,
+                    String.format("Saving result to file: %s", file.getAbsolutePath()));
 
             Writer fileWriter = new FileWriter(file);
 
