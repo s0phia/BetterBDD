@@ -1,0 +1,2 @@
+- rule: empty_feature_file
+  enabled: true

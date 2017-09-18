@@ -18,6 +18,7 @@
         <com.fasterxml.jackson.core.version>2.2.3</com.fasterxml.jackson.core.version>
         <org.apache.commons.version>3.4</org.apache.commons.version>
         <org.apache.logging.log4j.version>2.9.0</org.apache.logging.log4j.version>
+        <info.cukes.version>1.2.5</info.cukes.version>
     </properties>
     <build>
         <plugins>
@@ -92,6 +93,18 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>${org.apache.logging.log4j.version}</version>
+        </dependency>
+          <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>${info.cukes.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>${info.cukes.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

@@ -20,9 +20,12 @@ public class AppArgs {
 
     @Parameter(names = {"-r", "--rules"},
             validateWith = PathValidator.class,
-            description = "Path to rules config .yml file")
+            description = "Path to rules_config config .yml file")
     private String rulesPath = ".";
 
+    @Parameter(names = {"-o", "--output"},
+            description = "Path to report output")
+    private String outPutPath = "report.json";
 
     public List<String> getParameters() {
         return parameters;
@@ -38,6 +41,10 @@ public class AppArgs {
 
     public String getRulesPath() {
         return rulesPath;
+    }
+
+    public String getOutPutPath() {
+        return outPutPath;
     }
 }
 
