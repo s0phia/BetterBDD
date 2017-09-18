@@ -1,0 +1,40 @@
+- rule: empty_feature_file
+  enabled: true
+
+- rule: bad_feature_name
+  enabled: true
+  min_words: 2
+
+- rule: bad_scenario_name
+  enabled: true
+  min_words: 2
+
+- rule: bad_step_sequence
+  enabled: true
+
+- rule: duplicate_feature_name
+  enabled: true
+
+- rule: duplicate_scenario_name
+  enabled: true
+
+- rule: missing_action_step
+  enabled: true
+
+- rule: missing_scenario_steps
+  enabled: true
+
+- rule: named_third_person_narrative
+  enabled: true
+
+- rule: missing_verification_step
+  enabled: true
+
+- rule: technical_language
+  enabled: true
+
+- rule: too_many_scenario_steps
+  enabled: true
+  max_steps: 6
+
+
